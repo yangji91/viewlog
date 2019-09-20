@@ -1,0 +1,28 @@
+server:
+  port: 28000
+netty-websocket:
+  port: 28001
+  path: /ws
+#websocket地址
+ws-url: ws://localhost:28001/ws
+
+
+#配置要查看的日志路径：名称|日志路径
+log-path:
+  log1|D:\var\logs
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+  freemarker:
+    suffix: .ftl
+    content-type: text/html
+    charset: UTF-8
+    cache: false
+    template-loader-path: classpath:/templates
+  thymeleaf:
+    cache: false
+  mvc:
+    static-path-pattern: /static/**
