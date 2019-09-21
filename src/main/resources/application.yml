@@ -5,8 +5,8 @@ netty-websocket:
   path: /ws
 #websocket地址
 ws-url: ws://localhost:28001/ws
-
-
+#http地址
+http-path: /viewlog
 #配置要查看的日志路径：名称|日志路径
 log-path:
   log1|D:\var\logs

@@ -27,7 +27,7 @@ import java.util.List;
  * @author liubinqiang
  */
 @Controller
-@RequestMapping("viewlog2")
+@RequestMapping("${http-path}")
 public class HomeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 

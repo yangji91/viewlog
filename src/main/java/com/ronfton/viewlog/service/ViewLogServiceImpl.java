@@ -29,6 +29,9 @@ public class ViewLogServiceImpl implements IViewLogService {
     @Value("${log-path}")
     private String logPaths;
 
+    @Value("${http-path}")
+    private String httpPath;
+
 
     @Override
     public List<LogInfo> getLogInfos(String logPaths) {
@@ -39,7 +42,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                 if (p != null && p.length() > 0) {
                     String[] ls = p.split("\\|");
                     if (ls.length == 2) {
-                        LogInfo info = new LogInfo(ls[0], ls[1]);
+                        LogInfo info = new LogInfo(ls[0], ls[1], httpPath);
                         logInfos.add(info);
                     }
                 }
@@ -64,10 +67,10 @@ public class ViewLogServiceImpl implements IViewLogService {
                                     .size(Util.byteToM(log.length()))
                                     .isFile(log.isFile())
                                     .modifyTime(Util.timespanToDateStr(log.lastModified()))
-                                    .downloadUrl("/viewlog2/download?path=" + Util.urlEncode(log.getCanonicalPath()))
-                                    .openUrl("/viewlog2/open?path=" + Util.urlEncode(log.getCanonicalPath()))
-                                    .realTimeLogUrl("/viewlog2/do?cmd=tail -f " + Util.urlEncode(log.getCanonicalPath()))
-                                    .latestNumLogUrl("/viewlog2/do?cmd=tail -200 " + Util.urlEncode(log.getCanonicalPath()))
+                                    .downloadUrl(httpPath + "/download?path=" + Util.urlEncode(log.getCanonicalPath()))
+                                    .openUrl(httpPath + "/open?path=" + Util.urlEncode(log.getCanonicalPath()))
+                                    .realTimeLogUrl(httpPath + "/do?cmd=tail -f " + Util.urlEncode(log.getCanonicalPath()))
+                                    .latestNumLogUrl(httpPath + "/do?cmd=tail -200 " + Util.urlEncode(log.getCanonicalPath()))
                                     .build();
                             fs.add(info);
                         }

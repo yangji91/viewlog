@@ -21,14 +21,14 @@ public class LogInfo {
     public LogInfo() {
     }
 
-    public LogInfo(String name, String logPath) {
+    public LogInfo(String name, String logPath, String httpPath) {
         this.name = name;
         this.logPath = logPath;
         this.latestLogFile = getLatestFile();
         if (this.latestLogFile != null) {
-            this.realTimeLogUrl = "/viewlog2/do?cmd=tail -f " + this.logPath + File.separator + this.latestLogFile;
-            this.latestNumLogUrl = "/viewlog2/do?cmd=tail -200 " + this.logPath + File.separator + this.latestLogFile;
-            this.viewFileInfoUrl = "/viewlog2/info?path=" + Util.urlEncode(this.logPath);
+            this.realTimeLogUrl = httpPath + "/do?cmd=tail -f " + this.logPath + File.separator + this.latestLogFile;
+            this.latestNumLogUrl = httpPath + "/do?cmd=tail -200 " + this.logPath + File.separator + this.latestLogFile;
+            this.viewFileInfoUrl = httpPath + "/info?path=" + Util.urlEncode(this.logPath);
         }
     }
 
