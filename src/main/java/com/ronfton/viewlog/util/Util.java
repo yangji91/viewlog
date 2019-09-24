@@ -11,16 +11,24 @@ import java.util.Date;
  */
 public class Util {
 
+    private static float KB = 1024;
+    private static float MB = 1024 * 1024;
+
     public static String dateFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }
 
-    public static String byteToM(long length) {
-        float m = 1024 * 1024;
-        float ret = length / m;
-        DecimalFormat format = new DecimalFormat(",##0.00M");
-        return format.format(ret);
+    public static String bytesToView(long length) {
+        if (length < KB) {
+            return length + "Bytes";
+        } else if (length < MB) {
+            DecimalFormat format = new DecimalFormat(",##0.00KB");
+            return format.format(length / KB);
+        } else {
+            DecimalFormat format = new DecimalFormat(",##0.00MB");
+            return format.format(length / MB);
+        }
     }
 
     public static String timespanToDateStr(long timespan) {

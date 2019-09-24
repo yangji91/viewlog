@@ -64,7 +64,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                             FileInfo info = FileInfo.builder()
                                     .name(log.getName())
                                     .path(log.getCanonicalPath())
-                                    .size(Util.byteToM(log.length()))
+                                    .size(Util.bytesToView(log.length()))
                                     .isFile(log.isFile())
                                     .modifyTime(Util.timespanToDateStr(log.lastModified()))
                                     .downloadUrl(httpPath + "/download?path=" + Util.urlEncode(log.getCanonicalPath()))
