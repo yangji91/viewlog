@@ -1,5 +1,8 @@
 package com.ronfton.viewlog.util;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
@@ -9,10 +12,23 @@ import java.util.Date;
 /**
  * @author liubinqiang
  */
+@Component
 public class Util {
+
+    private static int logScope;
+
+    @Value("${log-scope}")
+    private void setLogScope(int ls) {
+        logScope = ls;
+    }
 
     private static float KB = 1024;
     private static float MB = 1024 * 1024;
+
+    public static boolean isInScope(long fileEditTime) {
+        long startTime = System.currentTimeMillis() - (24 * 3600 * 1000 * logScope);
+        return fileEditTime > startTime;
+    }
 
     public static String dateFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

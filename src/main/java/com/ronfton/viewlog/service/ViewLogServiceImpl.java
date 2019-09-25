@@ -57,7 +57,7 @@ public class ViewLogServiceImpl implements IViewLogService {
         try {
             if (path != null && path.length() > 0) {
                 File file = new File(path);
-                if (file.isDirectory() && file.listFiles().length > 0) {
+                if (file.isDirectory() && file.listFiles() != null && file.listFiles().length > 0) {
                     File[] logs = file.listFiles(new LogFileFilter());
                     if (logs.length > 0) {
                         for (File log : logs) {
@@ -92,8 +92,12 @@ public class ViewLogServiceImpl implements IViewLogService {
             if (path != null && path.length() > 0) {
                 File file = new File(path);
                 if (file.exists() && file.isFile() && file.length() > 0) {
-                    byte[] bs = Files.readAllBytes(Paths.get(path));
-                    log = new String(bs);
+                    if (Util.isInScope(file.lastModified())) {
+                        byte[] bs = Files.readAllBytes(Paths.get(path));
+                        log = new String(bs);
+                    } else {
+                        log = "该文件超过访问范围，不允许访问";
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -109,7 +113,13 @@ public class ViewLogServiceImpl implements IViewLogService {
                 String[] cs = cmd.split(" ");
                 String filePath = cs[cs.length - 1];
                 List<LogInfo> logInfos = getLogInfos(logPaths);
-                return logInfos.stream().anyMatch(f -> filePath.startsWith(f.getLogPath()));
+                if (logInfos.stream().anyMatch(f -> filePath.startsWith(f.getLogPath()))) {
+                    File file = new File(filePath);
+                    if (file.exists() && file.isFile() && Util.isInScope(file.lastModified())) {
+                        LOGGER.info("将要用命令访问文件：{}", filePath);
+                        return true;
+                    }
+                }
             }
         }
         return false;

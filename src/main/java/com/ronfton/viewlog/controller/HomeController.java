@@ -3,6 +3,7 @@ package com.ronfton.viewlog.controller;
 import com.ronfton.viewlog.bean.FileInfo;
 import com.ronfton.viewlog.bean.LogInfo;
 import com.ronfton.viewlog.service.IViewLogService;
+import com.ronfton.viewlog.util.Util;
 import com.ronfton.viewlog.util.ZipUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,7 @@ public class HomeController {
     private ResponseEntity<InputStreamResource> downloadFile(HttpServletRequest request, String path) {
         try {
             File file = new File(path);
-            if (file.exists()) {
+            if (file.exists() && Util.isInScope(file.lastModified())) {
                 String zipPath = path + ".zip";
                 FileOutputStream fos1 = new FileOutputStream(new File(zipPath));
                 List<File> fs = new ArrayList<>();
