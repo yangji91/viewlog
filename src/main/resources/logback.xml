@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="10 seconds">
-    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <!--    该配置会向/tmp/spring.log打印日志，需要注释掉，换成下面的defaults.xml-->
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <logger name="org.springframework.web" level="INFO"/>
     
     <property name="LOG_PATH" value="logs" />
