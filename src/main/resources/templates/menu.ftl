@@ -12,6 +12,9 @@
         <thead>
         <tr>
             <td>项目名称</td>
+            <td>总大小</td>
+            <td>文件个数</td>
+            <td>文件夹个数</td>
             <td>操作1</td>
             <td>操作2</td>
             <td>操作3</td>
@@ -21,6 +24,9 @@
             <#list logs as l>
                 <tr>
                     <td>${l.name}</td>
+                    <td>${l.fileTotalLength}</td>
+                    <td>${l.fileNum}</td>
+                    <td>${l.dirNum}</td>
                     <td>
                         <#if l.viewFileInfoUrl??>
                             <a target="_blank" href="${l.viewFileInfoUrl}">查看全部日志</a>

@@ -3,6 +3,7 @@ package com.ronfton.viewlog.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
@@ -73,5 +74,68 @@ public class Util {
 
         }
         return str;
+    }
+
+    public static long getFileLength(String path) {
+        long length = 0;
+        if (path != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                length = getDirSize(file, length);
+            }
+        }
+        return length;
+    }
+
+
+    private static long getDirSize(File file, long length) {
+        if (file.isFile()) {
+            //如果是文件，获取文件大小累加
+            length += file.length();
+        } else if (file.isDirectory()) {
+            //获取目录中的文件及子目录信息
+            File[] f1 = file.listFiles();
+            for (int i = 0; i < f1.length; i++) {
+                //调用递归遍历f1数组中的每一个对象
+                length = getDirSize(f1[i], length);
+            }
+        }
+        return length;
+    }
+
+    public static long[] getFileNumber(String path) {
+        long[] num = {0, 0};
+        if (path != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                num = getDirNumber(file, num);
+                if (num[1] > 0) {
+                    num[1] -= 1;
+                }
+            }
+        }
+        return num;
+    }
+
+
+    private static long[] getDirNumber(File file, long[] num) {
+        if (file.isFile()) {
+            //如果是文件，获取文件大小累加
+            num[0] += 1;
+        } else if (file.isDirectory()) {
+            num[1] += 1;
+            //获取目录中的文件及子目录信息
+            File[] f1 = file.listFiles();
+            for (int i = 0; i < f1.length; i++) {
+                //调用递归遍历f1数组中的每一个对象
+                num = getDirNumber(f1[i], num);
+            }
+        }
+        return num;
+    }
+
+    public static void main(String[] args) {
+        long[] l = getFileNumber("D:\\var\\log\\rft-boss");
+        System.out.println(l);
     }
 }

@@ -49,7 +49,7 @@ public class LogController {
      * @param modelMap
      * @return
      */
-    @RequestMapping("/")
+    @RequestMapping("")
     public String index(HttpServletRequest request, ModelMap modelMap) {
         List<LogInfo> logs = viewLogService.getLogInfos(logPaths);
         modelMap.put("logs", logs);

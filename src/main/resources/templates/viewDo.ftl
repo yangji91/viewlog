@@ -37,11 +37,10 @@
 
         var host = window.location.hostname;
         if (isValidIP(host)) {
-            url = p + host + $("hidWsPort").val() + url;
+            url = p + host + ":" + $("#hidWsPort").val() + url;
         } else {
             url = p + host + url;
         }
-        alert(url);
         var websocket = new WebSocket(url);
         websocket.onmessage = function (event) {
             log(event.data);

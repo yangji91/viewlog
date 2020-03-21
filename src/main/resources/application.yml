@@ -37,5 +37,5 @@ log-path:
 spring:
   security:
     user:
-      name: 1
-      password: 1
+      name: admin
+      password: log@33

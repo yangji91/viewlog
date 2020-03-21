@@ -24,6 +24,10 @@ public class LogInfo {
     public LogInfo(String name, String logPath, String httpPath) {
         this.name = name;
         this.logPath = logPath;
+        this.fileTotalLength = Util.bytesToView(Util.getFileLength(logPath));
+        long[] num = Util.getFileNumber(logPath);
+        this.fileNum = num[0];
+        this.dirNum = num[1];
         this.latestLogFile = getLatestFile();
         if (this.latestLogFile != null) {
             this.realTimeLogUrl = httpPath + "/do?cmd=tail -f " + this.logPath + File.separator + this.latestLogFile;
@@ -40,6 +44,18 @@ public class LogInfo {
      * 项目日志路径
      */
     private String logPath;
+    /**
+     * 日志目录总大小
+     */
+    private String fileTotalLength;
+    /**
+     * 包含文件个数
+     */
+    private long fileNum;
+    /**
+     * 包含文件夹个数
+     */
+    private long dirNum;
     /**
      * 最新日志文件
      */
@@ -73,6 +89,7 @@ public class LogInfo {
         String fileName = null;
         File file = new File(this.logPath);
         if (file != null && file.exists()) {
+            file.length();
             if (file.isFile()) {
                 fileName = file.getName();
             } else {
