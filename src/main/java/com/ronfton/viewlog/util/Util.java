@@ -26,7 +26,8 @@ public class Util {
     private static float MB = 1024 * 1024;
 
     public static boolean isInScope(long fileEditTime) {
-        long startTime = System.currentTimeMillis() - (24 * 3600 * 1000 * logScope);
+        long a = 3600;
+        long startTime = System.currentTimeMillis() - (24 * a * 1000 * logScope);
         return fileEditTime > startTime;
     }
 

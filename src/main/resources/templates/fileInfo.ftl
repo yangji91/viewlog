@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>查看日志</title>
-    <link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
 </head>
 <body>
 <h4>${path}</h4>
 <div>
-    <table class="table" style="width: 1000px">
+    <table class="table" style="width: 1200px">
         <thead>
         <tr>
             <td>文件名称</td>
