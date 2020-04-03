@@ -28,12 +28,14 @@ public class LogInfo {
         long[] num = Util.getFileNumber(logPath);
         this.fileNum = num[0];
         this.dirNum = num[1];
+        this.fileIcon = Util.getIcon(logPath);
         this.latestLogFile = getLatestFile();
-        if (this.latestLogFile != null) {
-            this.realTimeLogUrl = httpPath + "/do?cmd=tail -f " + this.logPath + File.separator + this.latestLogFile;
-            this.latestNumLogUrl = httpPath + "/do?cmd=tail -200 " + this.logPath + File.separator + this.latestLogFile;
-            this.viewFileInfoUrl = httpPath + "/info?path=" + Util.urlEncode(this.logPath);
-        }
+        this.viewFileInfoUrl = httpPath + "/info?path=" + Util.urlEncode(this.logPath);
+//        if (this.latestLogFile != null) {
+//            this.realTimeLogUrl = httpPath + "/do?cmd=tail -f " + this.logPath + File.separator + this.latestLogFile;
+//            this.latestNumLogUrl = httpPath + "/do?cmd=tail -200 " + this.logPath + File.separator + this.latestLogFile;
+//
+//        }
     }
 
     /**
@@ -79,6 +81,8 @@ public class LogInfo {
      */
     private String viewFileInfoUrl;
 
+    private String fileIcon;
+
 
     /**
      * 从日志路径中找到最新日志并且是当天最大的
@@ -104,14 +108,14 @@ public class LogInfo {
                         long lastModifyTime = files.get(0).lastModified();
                         Date lastModifyTimeDate = new Date(lastModifyTime);
                         this.latestModifyTime = Util.dateFormat(lastModifyTimeDate);
-                        LocalDate localDate = lastModifyTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+/*                        LocalDate localDate = lastModifyTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                         long timestamp = localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant().toEpochMilli();
                         //只查询最新日期的所有文件
                         files = files.stream().filter(f -> f.lastModified() >= timestamp).collect(Collectors.toList());
                         //按大小排序
                         files = files.stream().sorted(Comparator.comparing(File::length)).collect(Collectors.toList());
                         Collections.reverse(files);
-                        fileName = files.get(0).getName();
+                        fileName = files.get(0).getName();*/
                     }
                 }
             }

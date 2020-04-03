@@ -25,4 +25,5 @@ public class FileInfo {
      * 最近多少条日志
      */
     private String latestNumLogUrl;
+    private String fileIcon;
 }

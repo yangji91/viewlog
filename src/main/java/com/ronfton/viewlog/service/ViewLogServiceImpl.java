@@ -71,6 +71,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                                     .openUrl(httpPath + "/open?path=" + Util.urlEncode(log.getCanonicalPath()))
                                     .realTimeLogUrl(httpPath + "/do?cmd=tail -f " + Util.urlEncode(log.getCanonicalPath()))
                                     .latestNumLogUrl(httpPath + "/do?cmd=tail -200 " + Util.urlEncode(log.getCanonicalPath()))
+                                    .fileIcon(Util.getIcon(log))
                                     .build();
                             fs.add(info);
                         }

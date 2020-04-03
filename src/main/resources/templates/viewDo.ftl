@@ -10,10 +10,15 @@
     <input type="hidden" id="hidWsUrl" value="${wsUrl}">
     <input type="hidden" id="hidWsPort" value="${wsPort}">
 </div>
-<div id="log-container" style="height: 6000px; overflow-y: scroll; background: #333; color: #aaa; padding: 0px;">
-    <div>
-    </div>
+<#--<div id="log-container" style="height: 6000px; overflow-y: scroll; background: #333; color: #aaa; padding: 0px;">-->
+<#--    <div>-->
+<#--    </div>-->
+<#--</div>-->
+<pre id="log-container" style="word-wrap: break-word; white-space: pre-wrap;">
+<div>
+
 </div>
+</pre>
 </body>
 <script>
     $(document).ready(function () {

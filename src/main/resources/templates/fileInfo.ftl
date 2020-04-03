@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
 </head>
 <body>
-<h4>${path}</h4>
+<h3><a href="/">查看日志</a>${path}</h3>
 <div>
     <table class="table" style="width: 1200px">
         <thead>
@@ -21,7 +21,7 @@
         </tr>
         <#list fs as f>
             <tr>
-                <td>${f.name}</td>
+                <td><img src="${f.fileIcon!}" width="25px"/>${f.name}</td>
                 <td>${f.size}</td>
                 <td>${f.modifyTime}</td>
                 <td>

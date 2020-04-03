@@ -1,5 +1,6 @@
 package com.ronfton.viewlog.util;
 
+import com.ronfton.viewlog.common.ConstStr;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -132,6 +133,26 @@ public class Util {
             }
         }
         return num;
+    }
+
+    public static String getIcon(File file) {
+        if (file.exists()) {
+            if (file.isDirectory()) {
+                return ConstStr.iconFolder;
+            } else {
+                if (file.getName().endsWith(".log.gz") || file.getName().endsWith(".zip")) {
+                    return ConstStr.iconZip;
+                } else {
+                    return ConstStr.iconLog;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String getIcon(String path) {
+        File file = new File(path);
+        return getIcon(file);
     }
 
     public static void main(String[] args) {

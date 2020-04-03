@@ -6,43 +6,26 @@
     <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
 </head>
 <body>
-<h3>查看日志</h3>
+<h3><a href="/">查看日志</a></h3>
 <div>
-    <table class="table" style="width: 1200px">
+    <table class="table" style="width: 800px">
         <thead>
         <tr>
             <td>项目名称</td>
+            <td>修改时间</td>
             <td>总大小</td>
             <td>文件个数</td>
-            <td>文件夹个数</td>
-            <td>操作1</td>
-            <td>操作2</td>
-            <td>操作3</td>
-            <td>日志文件最后修改时间</td>
         </tr>
         <#if logs??>
             <#list logs as l>
                 <tr>
-                    <td>${l.name}</td>
+                    <td><a target="" href="${l.viewFileInfoUrl}">
+                            <img src="${l.fileIcon!}" width="25px"/>
+                            ${l.name}
+                        </a></td>
+                    <td>${l.latestModifyTime!}</td>
                     <td>${l.fileTotalLength}</td>
                     <td>${l.fileNum}</td>
-                    <td>${l.dirNum}</td>
-                    <td>
-                        <#if l.viewFileInfoUrl??>
-                            <a target="_blank" href="${l.viewFileInfoUrl}">查看全部日志</a>
-                        </#if>
-                    </td>
-                    <td>
-                        <#if l.realTimeLogUrl??>
-                            <a target="_blank" href="${l.realTimeLogUrl}">查看实时日志</a>
-                        </#if>
-                    </td>
-                    <td>
-                        <#if l.latestNumLogUrl??>
-                            <a target="_blank" href="${l.latestNumLogUrl}">查看最近200条日志</a>
-                        </#if>
-                    </td>
-                    <td>${l.latestModifyTime!}</td>
                 </tr>
             </#list>
         </#if>
