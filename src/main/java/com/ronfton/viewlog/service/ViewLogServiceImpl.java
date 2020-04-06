@@ -3,9 +3,11 @@ package com.ronfton.viewlog.service;
 import com.ronfton.viewlog.bean.FileInfo;
 import com.ronfton.viewlog.bean.LogFileFilter;
 import com.ronfton.viewlog.bean.LogInfo;
-import com.ronfton.viewlog.util.Util;
+import com.ronfton.viewlog.config.SystemConfig;
+import com.ronfton.viewlog.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +28,8 @@ public class ViewLogServiceImpl implements IViewLogService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ViewLogServiceImpl.class);
 
-    @Value("${log-path}")
-    private String logPaths;
-
-    @Value("${http-path}")
-    private String httpPath;
-
+    @Autowired
+    private SystemConfig systemConfig;
 
     @Override
     public List<LogInfo> getLogInfos(String logPaths) {
@@ -42,7 +40,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                 if (p != null && p.length() > 0) {
                     String[] ls = p.split("\\|");
                     if (ls.length == 2) {
-                        LogInfo info = new LogInfo(ls[0], ls[1], httpPath);
+                        LogInfo info = new LogInfo(ls[0], ls[1], systemConfig.httpPath);
                         logInfos.add(info);
                     }
                 }
@@ -64,14 +62,15 @@ public class ViewLogServiceImpl implements IViewLogService {
                             FileInfo info = FileInfo.builder()
                                     .name(log.getName())
                                     .path(log.getCanonicalPath())
-                                    .size(Util.bytesToView(log.length()))
-                                    .isFile(log.isFile())
-                                    .modifyTime(Util.timespanToDateStr(log.lastModified()))
-                                    .downloadUrl(httpPath + "/download?path=" + Util.urlEncode(log.getCanonicalPath()))
-                                    .openUrl(httpPath + "/open?path=" + Util.urlEncode(log.getCanonicalPath()))
-                                    .realTimeLogUrl(httpPath + "/do?cmd=tail -f " + Util.urlEncode(log.getCanonicalPath()))
-                                    .latestNumLogUrl(httpPath + "/do?cmd=tail -200 " + Util.urlEncode(log.getCanonicalPath()))
-                                    .fileIcon(Util.getIcon(log))
+                                    .size(LogUtil.bytesToView(log.length()))
+                                    .isDirectory(log.isDirectory())
+                                    .dirUrl(log.isDirectory() ? (LogUtil.getInfoUrl(log.getCanonicalPath())) : null)
+                                    .modifyTime(LogUtil.timespanToDateStr(log.lastModified()))
+                                    .downloadUrl(systemConfig.httpPath + "/download?path=" + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .openUrl(systemConfig.httpPath + "/open?path=" + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .realTimeLogUrl(systemConfig.httpPath + "/do?cmd=tail -f " + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .latestNumLogUrl(systemConfig.httpPath + "/do?cmd=tail -200 " + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .fileIcon(LogUtil.getIcon(log))
                                     .build();
                             fs.add(info);
                         }
@@ -93,7 +92,7 @@ public class ViewLogServiceImpl implements IViewLogService {
             if (path != null && path.length() > 0) {
                 File file = new File(path);
                 if (file.exists() && file.isFile() && file.length() > 0) {
-                    if (Util.isInScope(file.lastModified())) {
+                    if (LogUtil.isInScope(file.lastModified())) {
                         byte[] bs = Files.readAllBytes(Paths.get(path));
                         log = new String(bs);
                     } else {
@@ -113,10 +112,10 @@ public class ViewLogServiceImpl implements IViewLogService {
             if (cmd.startsWith("tail")) {
                 String[] cs = cmd.split(" ");
                 String filePath = cs[cs.length - 1];
-                List<LogInfo> logInfos = getLogInfos(logPaths);
+                List<LogInfo> logInfos = getLogInfos(systemConfig.logPaths);
                 if (logInfos.stream().anyMatch(f -> filePath.startsWith(f.getLogPath()))) {
                     File file = new File(filePath);
-                    if (file.exists() && file.isFile() && Util.isInScope(file.lastModified())) {
+                    if (file.exists() && file.isFile() && LogUtil.isInScope(file.lastModified())) {
                         LOGGER.info("将要用命令访问文件：{}", filePath);
                         return true;
                     }

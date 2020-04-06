@@ -1,35 +1,46 @@
 package com.ronfton.viewlog.util;
 
+import com.ronfton.viewlog.bean.DirInfo;
+import com.ronfton.viewlog.bean.LogInfo;
 import com.ronfton.viewlog.common.ConstStr;
+import com.ronfton.viewlog.config.SystemConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import sun.print.PSPrinterJob;
 
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author liubinqiang
  */
 @Component
-public class Util {
+public class LogUtil {
 
-    private static int logScope;
+    private static SystemConfig systemConfig;
 
-    @Value("${log-scope}")
-    private void setLogScope(int ls) {
-        logScope = ls;
+    @Autowired
+    private void setSystemConfig(SystemConfig systemConfig) {
+        this.systemConfig = systemConfig;
     }
 
     private static float KB = 1024;
     private static float MB = 1024 * 1024;
 
+    /**
+     * 查看日志文件范围
+     *
+     * @param fileEditTime
+     * @return
+     */
     public static boolean isInScope(long fileEditTime) {
         long a = 3600;
-        long startTime = System.currentTimeMillis() - (24 * a * 1000 * logScope);
+        long startTime = System.currentTimeMillis() - (24 * a * 1000 * systemConfig.logScope);
         return fileEditTime > startTime;
     }
 
@@ -153,6 +164,75 @@ public class Util {
     public static String getIcon(String path) {
         File file = new File(path);
         return getIcon(file);
+    }
+
+    /**
+     * 获取日志目录
+     *
+     * @return
+     */
+    public static Map<String, String> getLogInfos() {
+        Map<String, String> logs = new HashMap<>();
+        if (systemConfig.logPaths != null) {
+            String[] ps = systemConfig.logPaths.split(",");
+            for (String p : ps) {
+                if (p != null && p.length() > 0) {
+                    String[] ls = p.split("\\|");
+                    if (ls.length == 2) {
+                        logs.put(ls[0], ls[1]);
+                    }
+                }
+            }
+        }
+        return logs;
+    }
+
+    public static boolean isLegal(String path) {
+        if (path != null) {
+            Map<String, String> logs = getLogInfos();
+            for (String s : logs.values()) {
+                if (path.startsWith(s)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 日志目录分层
+     *
+     * @param logMenus
+     * @param path
+     * @return
+     */
+    public static List<DirInfo> getPathHierarchy(String path) {
+        List<DirInfo> ds = new ArrayList<>();
+        if (path != null && path.length() > 0) {
+            Map<String, String> logs = getLogInfos();
+            for (String s : logs.values()) {
+                if (path.startsWith(s)) {
+                    ds.add(new DirInfo(s, getInfoUrl(s)));
+                    if (path.length() > s.length()) {
+                        path = path.replace(s, "");
+                        String[] ps = path.split("\\\\");
+                        String currentPath = s;
+                        for (String p : ps) {
+                            if (p != null && p.length() > 0) {
+                                currentPath = currentPath + File.separator + p;
+                                ds.add(new DirInfo(p, getInfoUrl(currentPath)));
+                            }
+                        }
+                    }
+                    return ds;
+                }
+            }
+        }
+        return ds;
+    }
+
+    public static String getInfoUrl(String path) {
+        return systemConfig.httpPath + "/info?path=" + LogUtil.urlEncode(path);
     }
 
     public static void main(String[] args) {

@@ -2,8 +2,9 @@ package com.ronfton.viewlog.controller;
 
 import com.ronfton.viewlog.bean.FileInfo;
 import com.ronfton.viewlog.bean.LogInfo;
+import com.ronfton.viewlog.config.SystemConfig;
 import com.ronfton.viewlog.service.IViewLogService;
-import com.ronfton.viewlog.util.Util;
+import com.ronfton.viewlog.util.LogUtil;
 import com.ronfton.viewlog.util.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,8 @@ import java.util.List;
 @RequestMapping("${http-path}")
 public class LogController {
 
-    @Value("${log-path}")
-    private String logPaths;
-    @Value("${netty-websocket.port}")
-    private String wsPort;
-    @Value("${netty-websocket.path}")
-    private String wsPath;
-
+    @Autowired
+    private SystemConfig systemConfig;
     @Autowired
     private IViewLogService viewLogService;
 
@@ -51,7 +47,7 @@ public class LogController {
      */
     @RequestMapping("")
     public String index(HttpServletRequest request, ModelMap modelMap) {
-        List<LogInfo> logs = viewLogService.getLogInfos(logPaths);
+        List<LogInfo> logs = viewLogService.getLogInfos(systemConfig.logPaths);
         modelMap.put("logs", logs);
         return "menu";
     }
@@ -69,7 +65,7 @@ public class LogController {
     public String logInfo(HttpServletRequest request, ModelMap modelMap, String path) {
         List<FileInfo> fs = viewLogService.getFileInfos(path);
         modelMap.put("fs", fs);
-        modelMap.put("path", path);
+        modelMap.put("path", LogUtil.getPathHierarchy(path));
         return "fileInfo";
     }
 
@@ -100,7 +96,7 @@ public class LogController {
     private ResponseEntity<InputStreamResource> downloadFile(HttpServletRequest request, String path) {
         try {
             File file = new File(path);
-            if (file.exists() && Util.isInScope(file.lastModified())) {
+            if (file.exists() && LogUtil.isInScope(file.lastModified())) {
                 String zipPath = path + ".zip";
                 FileOutputStream fos1 = new FileOutputStream(new File(zipPath));
                 List<File> fs = new ArrayList<>();
@@ -151,14 +147,14 @@ public class LogController {
     @RequestMapping("/do")
     public String viewDo(HttpServletRequest request, ModelMap modelMap, String cmd) {
         StringBuilder sb = new StringBuilder();
-        sb.append(wsPath).append("?cmd=");
+        sb.append(systemConfig.wsPath).append("?cmd=");
         if (cmd != null) {
             sb.append(cmd);
         }
         String wsUrl = sb.toString();
         log.info("ws地址：{}", wsUrl);
         modelMap.put("wsUrl", wsUrl);
-        modelMap.put("wsPort", wsPort);
+        modelMap.put("wsPort", systemConfig.wsPort);
         return "viewDo";
     }
 }

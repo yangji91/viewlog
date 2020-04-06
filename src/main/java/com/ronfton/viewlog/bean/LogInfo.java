@@ -1,13 +1,9 @@
 package com.ronfton.viewlog.bean;
 
-import com.ronfton.viewlog.util.Util;
+import com.ronfton.viewlog.util.LogUtil;
 import lombok.Data;
 
 import java.io.File;
-import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,13 +20,13 @@ public class LogInfo {
     public LogInfo(String name, String logPath, String httpPath) {
         this.name = name;
         this.logPath = logPath;
-        this.fileTotalLength = Util.bytesToView(Util.getFileLength(logPath));
-        long[] num = Util.getFileNumber(logPath);
+        this.fileTotalLength = LogUtil.bytesToView(LogUtil.getFileLength(logPath));
+        long[] num = LogUtil.getFileNumber(logPath);
         this.fileNum = num[0];
         this.dirNum = num[1];
-        this.fileIcon = Util.getIcon(logPath);
+        this.fileIcon = LogUtil.getIcon(logPath);
         this.latestLogFile = getLatestFile();
-        this.viewFileInfoUrl = httpPath + "/info?path=" + Util.urlEncode(this.logPath);
+        this.viewFileInfoUrl = httpPath + "/info?path=" + LogUtil.urlEncode(this.logPath);
 //        if (this.latestLogFile != null) {
 //            this.realTimeLogUrl = httpPath + "/do?cmd=tail -f " + this.logPath + File.separator + this.latestLogFile;
 //            this.latestNumLogUrl = httpPath + "/do?cmd=tail -200 " + this.logPath + File.separator + this.latestLogFile;
@@ -107,7 +103,7 @@ public class LogInfo {
                         //得到最新文件日期
                         long lastModifyTime = files.get(0).lastModified();
                         Date lastModifyTimeDate = new Date(lastModifyTime);
-                        this.latestModifyTime = Util.dateFormat(lastModifyTimeDate);
+                        this.latestModifyTime = LogUtil.dateFormat(lastModifyTimeDate);
 /*                        LocalDate localDate = lastModifyTimeDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                         long timestamp = localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant().toEpochMilli();
                         //只查询最新日期的所有文件

@@ -6,7 +6,15 @@
     <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
 </head>
 <body>
-<h3><a href="/">查看日志</a>${path}</h3>
+<div>
+    <h3><a href="/">Home</a>
+        <#if path??>
+            <#list path as item>
+                > <a href="${item.url}">${item.name}</a>
+            </#list>
+        </#if>
+    </h3>
+</div>
 <div>
     <table class="table" style="width: 1200px">
         <thead>
@@ -21,7 +29,14 @@
         </tr>
         <#list fs as f>
             <tr>
-                <td><img src="${f.fileIcon!}" width="25px"/>${f.name}</td>
+                <td>
+                    <#if f.directory>
+                        <a href="${f.dirUrl}"> <img src="${f.fileIcon!}" width="25px"/>${f.name}</a>
+                    </#if>
+                    <#if !f.directory>
+                        <img src="${f.fileIcon!}" width="25px"/>${f.name}
+                    </#if>
+                </td>
                 <td>${f.size}</td>
                 <td>${f.modifyTime}</td>
                 <td>

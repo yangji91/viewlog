@@ -2,7 +2,7 @@ package com.ronfton.viewlog.server;
 
 import com.ronfton.viewlog.common.ConstStr;
 import com.ronfton.viewlog.service.IViewLogService;
-import com.ronfton.viewlog.util.Util;
+import com.ronfton.viewlog.util.LogUtil;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class WebSocketServer {
         try {
             // 执行tail -f命令
             String cmd = parameterMap.getParameter("cmd");
-            cmd = Util.urlDecoder(cmd);
+            cmd = LogUtil.urlDecoder(cmd);
             LOGGER.info("执行命令请求：{}", cmd);
             if (viewLogService.verifyCmd(cmd)) {
                 process = Runtime.getRuntime().exec(cmd);

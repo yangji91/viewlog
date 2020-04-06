@@ -1,6 +1,6 @@
 package com.ronfton.viewlog.bean;
 
-import com.ronfton.viewlog.util.Util;
+import com.ronfton.viewlog.util.LogUtil;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -17,7 +17,7 @@ public class LogFileFilter implements FilenameFilter {
         //判断文件修改时间
         File file = new File(dir + File.separator + name);
         if (file.exists()) {
-            return Util.isInScope(file.lastModified());
+            return LogUtil.isInScope(file.lastModified());
         }
         //}
         return false;

@@ -13,7 +13,8 @@ public class FileInfo {
     private String name;
     private String modifyTime;
     private String size;
-    private boolean isFile;
+    private boolean isDirectory;
+    private String dirUrl;
     private String openUrl;
     private String downloadUrl;
     /**
@@ -26,4 +27,11 @@ public class FileInfo {
      */
     private String latestNumLogUrl;
     private String fileIcon;
+
+    public String genDirUrl(String path) {
+        if (this.isDirectory) {
+
+        }
+        return null;
+    }
 }
