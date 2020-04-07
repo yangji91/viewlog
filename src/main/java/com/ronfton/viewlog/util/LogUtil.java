@@ -88,6 +88,12 @@ public class LogUtil {
         return str;
     }
 
+    /**
+     * 计算文件或者文件夹大小
+     *
+     * @param path
+     * @return
+     */
     public static long getFileLength(String path) {
         long length = 0;
         if (path != null) {
@@ -115,8 +121,14 @@ public class LogUtil {
         return length;
     }
 
-    public static long[] getFileNumber(String path) {
-        long[] num = {0, 0};
+    /**
+     * 计算目录文件个数和文件夹个数
+     *
+     * @param path
+     * @return
+     */
+    public static int[] getFileNumber(String path) {
+        int[] num = {0, 0};
         if (path != null) {
             File file = new File(path);
             if (file.exists()) {
@@ -130,7 +142,7 @@ public class LogUtil {
     }
 
 
-    private static long[] getDirNumber(File file, long[] num) {
+    private static int[] getDirNumber(File file, int[] num) {
         if (file.isFile()) {
             //如果是文件，获取文件大小累加
             num[0] += 1;
@@ -202,7 +214,6 @@ public class LogUtil {
     /**
      * 日志目录分层
      *
-     * @param logMenus
      * @param path
      * @return
      */
@@ -214,8 +225,8 @@ public class LogUtil {
                 if (path.startsWith(s)) {
                     ds.add(new DirInfo(s, getInfoUrl(s)));
                     if (path.length() > s.length()) {
-                        path = path.replace(s, "");
-                        String[] ps = path.split("\\\\");
+                        path = path.substring(s.length());
+                        String[] ps = path.split(File.separator + File.separator);
                         String currentPath = s;
                         for (String p : ps) {
                             if (p != null && p.length() > 0) {
@@ -235,8 +246,23 @@ public class LogUtil {
         return systemConfig.httpPath + "/info?path=" + LogUtil.urlEncode(path);
     }
 
+    public static String getPathSizeAndFileCount(String path) {
+        String result = "";
+        File file = new File(path);
+        if (file.exists()) {
+            result = bytesToView(getFileLength(path));
+            if (file.isDirectory()) {
+                int[] numbers = getFileNumber(path);
+                result = result + " (" + numbers[0] + "个文件)";
+            }
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
-        long[] l = getFileNumber("D:\\var\\log\\rft-boss");
-        System.out.println(l);
+        String a1 = "D:\\var\\log\\rft-boss\\uaps-app-order-polling.2019-11-29.log";
+        String a = "/home/roncoo/pay/app/order-polling/logs/backup/2019-12-18-17-25";
+        String[] bs = a1.split(File.separator + File.separator);
+        System.out.println(bs.length);
     }
 }

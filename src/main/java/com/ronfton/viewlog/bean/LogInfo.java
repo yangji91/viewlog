@@ -21,7 +21,7 @@ public class LogInfo {
         this.name = name;
         this.logPath = logPath;
         this.fileTotalLength = LogUtil.bytesToView(LogUtil.getFileLength(logPath));
-        long[] num = LogUtil.getFileNumber(logPath);
+        int[] num = LogUtil.getFileNumber(logPath);
         this.fileNum = num[0];
         this.dirNum = num[1];
         this.fileIcon = LogUtil.getIcon(logPath);
@@ -49,11 +49,11 @@ public class LogInfo {
     /**
      * 包含文件个数
      */
-    private long fileNum;
+    private int fileNum;
     /**
      * 包含文件夹个数
      */
-    private long dirNum;
+    private int dirNum;
     /**
      * 最新日志文件
      */

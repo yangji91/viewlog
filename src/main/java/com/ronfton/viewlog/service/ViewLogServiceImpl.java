@@ -62,7 +62,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                             FileInfo info = FileInfo.builder()
                                     .name(log.getName())
                                     .path(log.getCanonicalPath())
-                                    .size(LogUtil.bytesToView(log.length()))
+                                    .size(LogUtil.getPathSizeAndFileCount(log.getCanonicalPath()))
                                     .isDirectory(log.isDirectory())
                                     .dirUrl(log.isDirectory() ? (LogUtil.getInfoUrl(log.getCanonicalPath())) : null)
                                     .modifyTime(LogUtil.timespanToDateStr(log.lastModified()))
