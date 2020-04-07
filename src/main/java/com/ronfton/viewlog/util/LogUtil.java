@@ -226,7 +226,8 @@ public class LogUtil {
                     ds.add(new DirInfo(s, getInfoUrl(s)));
                     if (path.length() > s.length()) {
                         path = path.substring(s.length());
-                        String[] ps = path.split(File.separator + File.separator);
+                        String sp = System.getProperty("os.name").contains("Windows") ? (File.separator + File.separator) : File.separator;
+                        String[] ps = path.split(sp);
                         String currentPath = s;
                         for (String p : ps) {
                             if (p != null && p.length() > 0) {
@@ -260,9 +261,10 @@ public class LogUtil {
     }
 
     public static void main(String[] args) {
+        System.out.println(System.getProperty("os.name"));
         String a1 = "D:\\var\\log\\rft-boss\\uaps-app-order-polling.2019-11-29.log";
-        String a = "/home/roncoo/pay/app/order-polling/logs/backup/2019-12-18-17-25";
-        String[] bs = a1.split(File.separator + File.separator);
+        String a = "/home/roncoo/pay/app/order-polling/logs/backup/2019-12-15-08-04";
+        String[] bs = a.split("/");
         System.out.println(bs.length);
     }
 }

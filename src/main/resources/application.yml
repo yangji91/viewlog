@@ -20,7 +20,7 @@ log-path:
   app-api|/var/log/rft-app-api,
   open-api|/var/log/rft-open-api,
   pay-gateway|/var/log/rft-gateway,
-  order-polling|/var/log/rft-order-polling,
+  order-polling|D:\var\log\order-polling,
   polling|/var/log/rft-polling,
   notify|/var/log/rft-notify,
   hallmgr|/var/log/rft-hallmgr,
