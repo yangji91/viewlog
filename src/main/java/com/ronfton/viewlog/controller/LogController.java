@@ -152,6 +152,7 @@ public class LogController {
         String wsUrl = sb.toString();
         log.info("ws地址：{}", wsUrl);
         modelMap.put("wsUrl", wsUrl);
+        modelMap.put("key", req.getKey());
         modelMap.put("wsPort", systemConfig.wsPort);
         return "viewDo";
     }

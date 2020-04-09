@@ -1,6 +1,7 @@
 package com.ronfton.viewlog.server;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.yeauty.pojo.Session;
 
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 /**
  * @author liubinqiang
  */
+@Slf4j
 public class ViewLogThread extends Thread {
 
     private BufferedReader reader;
@@ -31,7 +33,7 @@ public class ViewLogThread extends Thread {
                 session.sendText(line + "<br>");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("读取日志出错：", e);
         }
     }
 }

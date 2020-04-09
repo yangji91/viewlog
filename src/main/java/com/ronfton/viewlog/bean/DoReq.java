@@ -22,7 +22,7 @@ public class DoReq {
                     result = "tail -f " + this.path;
                     break;
                 case TAIL_N:
-                    result = "tail - " + this.length + " " + this.path;
+                    result = "tail -" + this.length + " " + this.path;
                     break;
                 case GREP:
                     result = "grep -C " + this.length + " " + this.key + " " + this.path;

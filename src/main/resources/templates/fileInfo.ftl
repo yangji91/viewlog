@@ -47,15 +47,13 @@
                     </#if>
                 </td>
                 <td>
-                    <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索</a>
                     <input type="text" value="" size="10">
-                    <a atype="searchLog2" href="javascript:" url="${f.searchLogUrl}">前后行数</a>
+                    <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
                     <input type="text" value="10" size="1px">
                 </td>
                 <td>
-                    <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">最近</a>
+                    <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">最近多少行日志</a>
                     <input type="text" value="200" size="1">
-                    <a atype="latestNum2" href="javascript:" url="${f.latestNumLogUrl}">行日志</a>
                 </td>
                 <td><a target="_blank" href="${f.openUrl}">查看全部</a></td>
                 <td><a target="_blank" href="${f.downloadUrl}">下载</a></td>
@@ -77,16 +75,8 @@
             var obj = $(this);
             openLog(obj.attr("url"), "", obj.next().val());
         });
-        $("[atype='latestNum2']").click(function () {
-            var obj = $(this);
-            openLog(obj.attr("url"), "", obj.prev().val());
-        });
 
         $("[atype='searchLog1']").click(function () {
-            var obj = $(this);
-            openLog(obj.attr("url"), obj.next().val(), obj.next().next().next().val());
-        });
-        $("[atype='searchLog2']").click(function () {
             var obj = $(this);
             openLog(obj.attr("url"), obj.prev().val(), obj.next().val());
         });

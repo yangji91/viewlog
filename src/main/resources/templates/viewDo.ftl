@@ -3,30 +3,37 @@
 <head>
     <meta charset="utf-8">
     <title>查看日志</title>
+    <style>
+        .key {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
     <script src="/jquery-3.4.1.min.js"></script>
 </head>
 <body>
 <div>
     <input type="hidden" id="hidWsUrl" value="${wsUrl}">
     <input type="hidden" id="hidWsPort" value="${wsPort}">
+    <input type="hidden" id="hidKey" value="${key}">
 </div>
-<#--<div id="log-container" style="height: 6000px; overflow-y: scroll; background: #333; color: #aaa; padding: 0px;">-->
-<#--    <div>-->
-<#--    </div>-->
-<#--</div>-->
 <pre id="log-container" style="word-wrap: break-word; white-space: pre-wrap;">
 <div>
 
 </div>
 </pre>
 </body>
+<script src="/jquery-3.4.1.min.js"></script>
 <script>
     $(document).ready(function () {
         function log(data) {
-            // 接收服务端的实时日志并添加到HTML页面中
+            var key = $("#hidKey").val();
+            if (key != null && key !== "") {
+                if (data.indexOf(key) != -1) {
+                    data.replace(key, "<span class='key'>" + key + "</span>");
+                }
+            }
             $("#log-container div").append(data);
-            // 滚动条滚动到最低部
-            //$("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
         }
 
 
