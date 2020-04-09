@@ -1,5 +1,6 @@
 package com.ronfton.viewlog.controller;
 
+import com.ronfton.viewlog.bean.DoReq;
 import com.ronfton.viewlog.bean.FileInfo;
 import com.ronfton.viewlog.bean.LogInfo;
 import com.ronfton.viewlog.config.SystemConfig;
@@ -141,16 +142,13 @@ public class LogController {
      *
      * @param request
      * @param modelMap
-     * @param cmd
      * @return
      */
     @RequestMapping("/do")
-    public String viewDo(HttpServletRequest request, ModelMap modelMap, String cmd) {
+    public String viewDo(HttpServletRequest request, ModelMap modelMap, DoReq req) {
         StringBuilder sb = new StringBuilder();
         sb.append(systemConfig.wsPath).append("?cmd=");
-        if (cmd != null) {
-            sb.append(cmd);
-        }
+        sb.append(req.getCmd());
         String wsUrl = sb.toString();
         log.info("ws地址：{}", wsUrl);
         modelMap.put("wsUrl", wsUrl);

@@ -68,8 +68,9 @@ public class ViewLogServiceImpl implements IViewLogService {
                                     .modifyTime(LogUtil.timespanToDateStr(log.lastModified()))
                                     .downloadUrl(systemConfig.httpPath + "/download?path=" + LogUtil.urlEncode(log.getCanonicalPath()))
                                     .openUrl(systemConfig.httpPath + "/open?path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .realTimeLogUrl(systemConfig.httpPath + "/do?cmd=tail -f " + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .latestNumLogUrl(systemConfig.httpPath + "/do?cmd=tail -200 " + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .realTimeLogUrl(systemConfig.httpPath + "/do?code=1&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .latestNumLogUrl(systemConfig.httpPath + "/do?code=2&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .searchLogUrl(systemConfig.httpPath + "/do?code=3&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
                                     .fileIcon(LogUtil.getIcon(log))
                                     .build();
                             fs.add(info);
@@ -109,7 +110,7 @@ public class ViewLogServiceImpl implements IViewLogService {
     @Override
     public boolean verifyCmd(String cmd) {
         if (cmd != null && cmd.length() > 0) {
-            if (cmd.startsWith("tail")) {
+            if (cmd.startsWith("tail") || cmd.startsWith("grep")) {
                 String[] cs = cmd.split(" ");
                 String filePath = cs[cs.length - 1];
                 List<LogInfo> logInfos = getLogInfos(systemConfig.logPaths);

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>查看日志</title>
     <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
+    <script src="/jquery-3.4.1.min.js"></script>
 </head>
 <body>
 <div>
@@ -16,16 +17,17 @@
     </h3>
 </div>
 <div>
-    <table class="table" style="width: 1200px">
+    <table class="table" style="width: 1500px">
         <thead>
         <tr>
             <td>文件名称</td>
             <td>大小</td>
             <td>修改时间</td>
-            <td>操作1</td>
-            <td>操作2</td>
-            <td>操作3</td>
-            <td>操作4</td>
+            <td>查看1</td>
+            <td>查看2</td>
+            <td>查看3</td>
+            <td>查看4</td>
+            <td>查看5</td>
         </tr>
         <#list fs as f>
             <tr>
@@ -41,13 +43,19 @@
                 <td>${f.modifyTime}</td>
                 <td>
                     <#if f.realTimeLogUrl??>
-                        <a target="_blank" href="${f.realTimeLogUrl}">查看实时日志</a>
+                        <a target="_blank" href="${f.realTimeLogUrl}">实时日志</a>
                     </#if>
                 </td>
                 <td>
-                    <#if f.latestNumLogUrl??>
-                        <a target="_blank" href="${f.latestNumLogUrl}">查看最近200条日志</a>
-                    </#if>
+                    <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索</a>
+                    <input type="text" value="" size="10">
+                    <a atype="searchLog2" href="javascript:" url="${f.searchLogUrl}">前后行数</a>
+                    <input type="text" value="10" size="1px">
+                </td>
+                <td>
+                    <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">最近</a>
+                    <input type="text" value="200" size="1">
+                    <a atype="latestNum2" href="javascript:" url="${f.latestNumLogUrl}">行日志</a>
                 </td>
                 <td><a target="_blank" href="${f.openUrl}">查看全部</a></td>
                 <td><a target="_blank" href="${f.downloadUrl}">下载</a></td>
@@ -58,3 +66,29 @@
 </div>
 </body>
 </html>
+
+<script>
+    $(document).ready(function () {
+        function openLog(url, key, length) {
+            window.open(url + "&key=" + key + "&length=" + length, "_blank");
+        }
+
+        $("[atype='latestNum1']").click(function () {
+            var obj = $(this);
+            openLog(obj.attr("url"), "", obj.next().val());
+        });
+        $("[atype='latestNum2']").click(function () {
+            var obj = $(this);
+            openLog(obj.attr("url"), "", obj.prev().val());
+        });
+
+        $("[atype='searchLog1']").click(function () {
+            var obj = $(this);
+            openLog(obj.attr("url"), obj.next().val(), obj.next().next().next().val());
+        });
+        $("[atype='searchLog2']").click(function () {
+            var obj = $(this);
+            openLog(obj.attr("url"), obj.prev().val(), obj.next().val());
+        });
+    });
+</script>
