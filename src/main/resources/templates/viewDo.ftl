@@ -13,9 +13,9 @@
 </head>
 <body>
 <div>
-    <input type="hidden" id="hidWsUrl" value="${wsUrl}">
-    <input type="hidden" id="hidWsPort" value="${wsPort}">
-    <input type="hidden" id="hidKey" value="${key}">
+    <input type="hidden" id="hidWsUrl" value="${wsUrl!}">
+    <input type="hidden" id="hidWsPort" value="${wsPort!}">
+    <input type="hidden" id="hidKey" value="${key!}">
 </div>
 <pre id="log-container" style="word-wrap: break-word; white-space: pre-wrap;">
 <div>
