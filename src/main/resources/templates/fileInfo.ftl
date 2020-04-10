@@ -43,16 +43,16 @@
                 <td>${f.modifyTime}</td>
                 <td>
                     <#if f.realTimeLogUrl??>
-                        <a target="_blank" href="${f.realTimeLogUrl}">实时日志</a>
+                        <a target="_blank" href="${f.realTimeLogUrl}">查看实时日志</a>
                     </#if>
                 </td>
                 <td>
                     <input type="text" value="" size="10">
                     <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
-                    <input type="text" value="10" size="1px">
+                    <input type="text" value="3" size="1px">
                 </td>
                 <td>
-                    <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">最近多少行日志</a>
+                    <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">查看最后n行日志</a>
                     <input type="text" value="200" size="1">
                 </td>
                 <td><a target="_blank" href="${f.openUrl}">查看全部</a></td>

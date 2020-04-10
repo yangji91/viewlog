@@ -29,8 +29,8 @@
         function log(data) {
             var key = $("#hidKey").val();
             if (key != null && key !== "") {
-                if (data.indexOf(key) != -1) {
-                    data.replace(key, "<span class='key'>" + key + "</span>");
+                if (data.indexOf(key) !== -1) {
+                    data = data.replace(key, "<span class='key'>" + key + "</span>");
                 }
             }
             $("#log-container div").append(data);
