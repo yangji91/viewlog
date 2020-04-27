@@ -1,11 +1,11 @@
 server:
-  port: 28000
+  port: 26000
   use-forward-headers: true
   tomcat:
     protocol-header: X-Forwarded-Proto
     port-header: X-Forwarded-Port
 netty-websocket:
-  port: 28001
+  port: 26001
   path: /ws
 #http地址，如果多个服务器都部署了viewlog，其它地址设置为/viewlog/2，/viewlog/3 等等
 http-path: /viewlog
@@ -13,8 +13,8 @@ http-path: /viewlog
 log-scope: 365
 #配置要查看的日志路径：名称|日志路径
 log-path:
-  boss|D:\var\log\rft-boss,
-  user|D:\var\log\rft-user,
+  boss|/var/log/rft-boss,
+  user|/var/log/rft-user,
   sso|/var/log/rft-sso,
   pos-gateway|/var/log/rft-posgateway,
   app-api|/var/log/rft-app-api,
@@ -32,7 +32,9 @@ log-path:
   task|D:\var\log\rx-task,
   keyservice|/var/log/rft-keyservice,
   msgcenter|/var/log/rft-msgcenter,
-  viewlog|/var/log/rft-viewlog
+  viewlog|/var/log/rft-viewlog,
+  dbmonitor|rft-dbmonitor,
+  canal|/usr/share/rft-canal/logs
 
 spring:
   security:
