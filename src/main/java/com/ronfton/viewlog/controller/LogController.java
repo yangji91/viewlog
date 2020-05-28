@@ -48,8 +48,11 @@ public class LogController {
      */
     @RequestMapping("")
     public String index(HttpServletRequest request, ModelMap modelMap) {
+        long a = System.currentTimeMillis();
+        log.info("访问日志首页收到请求");
         List<LogInfo> logs = viewLogService.getLogInfos(systemConfig.logPaths);
         modelMap.put("logs", logs);
+        log.info("访问日志首页返回，耗时：{}", System.currentTimeMillis() - a);
         return "menu";
     }
 
