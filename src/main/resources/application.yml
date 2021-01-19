@@ -4,6 +4,9 @@ server:
   tomcat:
     protocol-header: X-Forwarded-Proto
     port-header: X-Forwarded-Port
+  servlet:
+    session:
+      timeout: 60m
 netty-websocket:
   port: 26001
   path: /ws

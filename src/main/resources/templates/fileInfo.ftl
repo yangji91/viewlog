@@ -42,21 +42,33 @@
                 <td>${f.size}</td>
                 <td>${f.modifyTime}</td>
                 <td>
-                    <#if f.realTimeLogUrl??>
+                    <#if f.realTimeLogUrl?? && !f.directory>
                         <a target="_blank" href="${f.realTimeLogUrl}">查看实时日志</a>
                     </#if>
                 </td>
                 <td>
-                    <input type="text" value="" size="10">
-                    <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
-                    <input type="text" value="3" size="1px">
+                    <#if !f.directory>
+                        <input type="text" value="" size="10">
+                        <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
+                        <input type="text" value="3" size="1px">
+                    </#if>
                 </td>
                 <td>
-                    <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">查看最后n行日志</a>
-                    <input type="text" value="200" size="1">
+                    <#if !f.directory>
+                        <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">查看最后n行日志</a>
+                        <input type="text" value="200" size="1">
+                    </#if>
                 </td>
-                <td><a target="_blank" href="${f.openUrl}">查看全部</a></td>
-                <td><a target="_blank" href="${f.downloadUrl}">下载</a></td>
+                <td>
+                    <#if !f.directory>
+                        <a target="_blank" href="${f.openUrl}">查看全部</a>
+                    </#if>
+                </td>
+                <td>
+                    <#if !f.directory>
+                        <a target="_blank" href="${f.downloadUrl}">下载</a>
+                    </#if>
+                </td>
             </tr>
         </#list>
         </thead>
