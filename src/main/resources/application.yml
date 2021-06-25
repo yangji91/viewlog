@@ -10,37 +10,16 @@ server:
 netty-websocket:
   port: 26001
   path: /ws
-#http地址，如果多个服务器都部署了viewlog，其它地址设置为/viewlog/2，/viewlog/3 等等
+#http地址
 http-path: /viewlog
-#可以查看日志文件的范围-多少天以内的-默认查看10天内的日志文件
+#可以查看日志文件的范围-多少天以内的
 log-scope: 365
 #配置要查看的日志路径：名称|日志路径
 log-path:
-  boss|/var/log/rft-boss,
-  user|/var/log/rft-user,
-  sso|/var/log/rft-sso,
-  pos-gateway|/var/log/rft-posgateway,
-  app-api|/var/log/rft-app-api,
-  open-api|/var/log/rft-open-api,
-  pay-gateway|/var/log/rft-gateway,
-  order-polling|D:\var\log\order-polling,
-  polling|/var/log/rft-polling,
-  notify|/var/log/rft-notify,
-  hallmgr|/var/log/rft-hallmgr,
-  hall|/var/log/rft-hall,
-  monitor|/var/log/rft-monitor,
-  postool|/var/log/rft-postool,
-  unit-pc|/var/log/rft-unit-pc,
-  unit-mobile|/var/log/rft-unit-mobile,
-  task|D:\var\log\rx-task,
-  keyservice|/var/log/rft-keyservice,
-  msgcenter|/var/log/rft-msgcenter,
-  viewlog|/var/log/rft-viewlog,
-  dbmonitor|rft-dbmonitor,
-  canal|/usr/share/rft-canal/logs
-
-spring:
-  security:
-    user:
-      name: admin
-      password: log@33
+  demo|/var/log/demo,
+  demo2|/var/log/demo2
+#spring:
+#  security:
+#    user:
+#      name: admin
+#      password: admin
