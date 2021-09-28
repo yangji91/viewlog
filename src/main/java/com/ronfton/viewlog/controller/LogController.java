@@ -52,6 +52,7 @@ public class LogController {
         log.info("访问日志首页收到请求");
         List<LogInfo> logs = viewLogService.getLogInfos(systemConfig.logPaths);
         modelMap.put("logs", logs);
+        modelMap.put("logLink", systemConfig.logLink);
         log.info("访问日志首页返回，耗时：{}", System.currentTimeMillis() - a);
         return "menu";
     }

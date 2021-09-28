@@ -16,6 +16,9 @@ public class SystemConfig {
     public String wsPath;
     @Value("${log-scope}")
     public int logScope;
+    @Value("${log-link}")
+    public String logLink;
     @Value("${http-path}")
     public String httpPath;
+
 }

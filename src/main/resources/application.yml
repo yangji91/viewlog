@@ -14,6 +14,8 @@ netty-websocket:
 http-path: /viewlog
 #可以查看日志文件的范围-多少天以内的
 log-scope: 365
+#日志首页链接
+log-link: <a href="http://localhost:26000/">177服务器</a>
 #配置要查看的日志路径：名称|日志路径
 log-path:
   demo|/var/log/demo,

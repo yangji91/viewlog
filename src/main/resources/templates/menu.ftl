@@ -7,6 +7,7 @@
 </head>
 <body>
 <h3><a href="/">查看日志</a></h3>
+<h5>${logLink}</h5>
 <div>
     <table class="table" style="width: 800px">
         <thead>
