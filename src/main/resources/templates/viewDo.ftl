@@ -33,6 +33,8 @@
                     data = data.replace(key, "<span class='key'>" + key + "</span>");
                 }
             }
+            // data = data.replace("<", "&lt;");
+            // data = data.replace(">", "&gt;");
             $("#log-container div").append(data);
         }
 

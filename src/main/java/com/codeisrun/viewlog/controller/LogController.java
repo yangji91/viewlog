@@ -58,6 +58,13 @@ public class LogController {
         return "menu";
     }
 
+    /**
+     * 自定义目录页
+     *
+     * @param request
+     * @param modelMap
+     * @return
+     */
     @RequestMapping("menu")
     public String menuIndex(HttpServletRequest request, ModelMap modelMap) {
         log.info("访问日志菜单首页收到请求");
@@ -119,12 +126,15 @@ public class LogController {
         try {
             File file = new File(path);
             if (file.exists() && LogUtil.isInScope(file.lastModified())) {
-                String zipPath = path + ".zip";
-                FileOutputStream fos1 = new FileOutputStream(new File(zipPath));
-                List<File> fs = new ArrayList<>();
-                fs.add(file);
-                ZipUtil.toZip(fs, fos1);
-                FileSystemResource fileSystemResource = new FileSystemResource(zipPath);
+                if (!LogUtil.isCompressFile(file.getName())) {
+                    path = path + ".zip";
+                    FileOutputStream fos1 = new FileOutputStream(new File(path));
+                    List<File> fs = new ArrayList<>();
+                    fs.add(file);
+                    ZipUtil.toZip(fs, fos1);
+                }
+                //下载
+                FileSystemResource fileSystemResource = new FileSystemResource(path);
                 String userAgent = request.getHeader("User-Agent");
                 String oraFileName = fileSystemResource.getFilename();
                 String formFileName = oraFileName;

@@ -46,6 +46,7 @@ public class ViewLogServiceImpl implements IViewLogService {
         return logInfos;
     }
 
+
     @Override
     public List<FileInfo> getFileInfos(String path) {
         List<FileInfo> fs = new ArrayList<>();
@@ -61,6 +62,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                                     .path(log.getCanonicalPath())
                                     .size(LogUtil.getPathSizeAndFileCount(log.getCanonicalPath()))
                                     .isDirectory(log.isDirectory())
+                                    .isLogFile(LogUtil.isLogFile(log))
                                     .dirUrl(log.isDirectory() ? (LogUtil.getInfoUrl(log.getCanonicalPath())) : null)
                                     .modifyTime(LogUtil.timespanToDateStr(log.lastModified()))
                                     .downloadUrl(systemConfig.httpPath + "/download?path=" + LogUtil.urlEncode(log.getCanonicalPath()))

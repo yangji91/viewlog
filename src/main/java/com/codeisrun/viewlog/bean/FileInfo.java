@@ -14,6 +14,7 @@ public class FileInfo {
     private String modifyTime;
     private String size;
     private boolean isDirectory;
+    private boolean isLogFile;
     private String dirUrl;
     private String openUrl;
     private String downloadUrl;

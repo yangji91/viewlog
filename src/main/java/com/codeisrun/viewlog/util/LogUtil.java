@@ -155,12 +155,29 @@ public class LogUtil {
         return num;
     }
 
+    public static boolean isCompressFile(String fileName) {
+        if (fileName.endsWith(".tar.gz") || fileName.endsWith(".zip")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isLogFile(File log) {
+        if (log.isDirectory()) {
+            return false;
+        }
+        if (isCompressFile(log.getName())) {
+            return false;
+        }
+        return true;
+    }
+
     public static String getIcon(File file) {
         if (file.exists()) {
             if (file.isDirectory()) {
                 return ConstStr.iconFolder;
             } else {
-                if (file.getName().endsWith(".log.gz") || file.getName().endsWith(".zip")) {
+                if (isCompressFile(file.getName())) {
                     return ConstStr.iconZip;
                 } else {
                     return ConstStr.iconLog;

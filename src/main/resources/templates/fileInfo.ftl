@@ -34,33 +34,32 @@
                 <td>
                     <#if f.directory>
                         <a href="${f.dirUrl}"> <img src="${f.fileIcon!}" width="25px"/>${f.name}</a>
-                    </#if>
-                    <#if !f.directory>
+                    <#else>
                         <img src="${f.fileIcon!}" width="25px"/>${f.name}
                     </#if>
                 </td>
                 <td>${f.size}</td>
                 <td>${f.modifyTime}</td>
                 <td>
-                    <#if f.realTimeLogUrl?? && !f.directory>
+                    <#if f.realTimeLogUrl?? && !f.directory && f.logFile>
                         <a target="_blank" href="${f.realTimeLogUrl}">查看实时日志</a>
                     </#if>
                 </td>
                 <td>
-                    <#if !f.directory>
+                    <#if !f.directory && f.logFile>
                         <input type="text" value="" size="10">
                         <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
                         <input type="text" value="3" size="1px">
                     </#if>
                 </td>
                 <td>
-                    <#if !f.directory>
+                    <#if !f.directory && f.logFile>
                         <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">查看最后n行日志</a>
                         <input type="text" value="200" size="1">
                     </#if>
                 </td>
                 <td>
-                    <#if !f.directory>
+                    <#if !f.directory && f.logFile>
                         <a target="_blank" href="${f.openUrl}">查看全部</a>
                     </#if>
                 </td>
