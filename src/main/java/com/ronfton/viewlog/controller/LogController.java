@@ -3,6 +3,7 @@ package com.ronfton.viewlog.controller;
 import com.ronfton.viewlog.bean.DoReq;
 import com.ronfton.viewlog.bean.FileInfo;
 import com.ronfton.viewlog.bean.LogInfo;
+import com.ronfton.viewlog.bean.LogMenu;
 import com.ronfton.viewlog.config.SystemConfig;
 import com.ronfton.viewlog.service.IViewLogService;
 import com.ronfton.viewlog.util.LogUtil;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -55,6 +57,22 @@ public class LogController {
         modelMap.put("logLink", systemConfig.logLink);
         log.info("访问日志首页返回，耗时：{}", System.currentTimeMillis() - a);
         return "menu";
+    }
+
+    @RequestMapping("menu")
+    public String menuIndex(HttpServletRequest request, ModelMap modelMap) {
+        log.info("访问日志菜单首页收到请求");
+        HashMap<String, List<LogMenu>> menuItemList = viewLogService.getMenuItemList();
+        int maxLenght = 0;
+        for (List<LogMenu> logs : menuItemList.values()) {
+            if (logs.size() > maxLenght) {
+                maxLenght = logs.size();
+            }
+        }
+        maxLenght = maxLenght - 1;
+        modelMap.put("menus", menuItemList);
+        modelMap.put("maxLenght", maxLenght);
+        return "menuIndex";
     }
 
 

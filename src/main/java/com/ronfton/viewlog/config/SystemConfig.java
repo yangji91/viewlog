@@ -20,5 +20,6 @@ public class SystemConfig {
     public String logLink;
     @Value("${http-path}")
     public String httpPath;
-
+    @Value("${log-menu}")
+    public String logMenu;
 }

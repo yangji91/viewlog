@@ -3,21 +3,18 @@ package com.ronfton.viewlog.service;
 import com.ronfton.viewlog.bean.FileInfo;
 import com.ronfton.viewlog.bean.LogFileFilter;
 import com.ronfton.viewlog.bean.LogInfo;
+import com.ronfton.viewlog.bean.LogMenu;
 import com.ronfton.viewlog.config.SystemConfig;
 import com.ronfton.viewlog.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -124,5 +121,27 @@ public class ViewLogServiceImpl implements IViewLogService {
             }
         }
         return false;
+    }
+
+    @Override
+    public LinkedHashMap<String, List<LogMenu>> getMenuItemList() {
+        LinkedHashMap<String, List<LogMenu>> menuMap = new LinkedHashMap<>();
+        if (systemConfig.logMenu != null) {
+            String[] logs = systemConfig.logMenu.split(",");
+            for (String log : logs) {
+                String[] items = log.split("\\|");
+                if (items.length == 3) {
+                    items[0] = items[0].trim();
+                    if (menuMap.containsKey(items[0])) {
+                        menuMap.get(items[0]).add(new LogMenu(items[1], items[2]));
+                    } else {
+                        List<LogMenu> temp = new ArrayList<>();
+                        temp.add(new LogMenu(items[1], items[2]));
+                        menuMap.put(items[0], temp);
+                    }
+                }
+            }
+        }
+        return menuMap;
     }
 }

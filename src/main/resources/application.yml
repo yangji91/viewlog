@@ -25,3 +25,7 @@ log-path:
 #    user:
 #      name: admin
 #      password: admin
+#日志主页目录
+log-menu:
+  渠道|APP|http://127.0.0.1:26000/viewlog/info?path=/var/log/,
+  订单|OMS|http://127.0.0.1:26000/viewlog/info?path=/var/log/,
