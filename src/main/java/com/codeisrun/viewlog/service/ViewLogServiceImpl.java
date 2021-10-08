@@ -70,6 +70,7 @@ public class ViewLogServiceImpl implements IViewLogService {
                                     .realTimeLogUrl(systemConfig.httpPath + "/do?code=1&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
                                     .latestNumLogUrl(systemConfig.httpPath + "/do?code=2&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
                                     .searchLogUrl(systemConfig.httpPath + "/do?code=3&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
+                                    .searchGzipLogUrl(systemConfig.httpPath + "/do?code=4&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
                                     .fileIcon(LogUtil.getIcon(log))
                                     .build();
                             fs.add(info);
@@ -109,6 +110,9 @@ public class ViewLogServiceImpl implements IViewLogService {
     @Override
     public boolean verifyCmd(String cmd) {
         if (cmd != null && cmd.length() > 0) {
+            if (cmd.startsWith("gunzip -dc")) {
+                return true;
+            }
             if (cmd.startsWith("tail") || cmd.startsWith("grep")) {
                 String[] cs = cmd.split(" ");
                 String filePath = cs[cs.length - 1];

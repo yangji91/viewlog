@@ -46,9 +46,14 @@
                     </#if>
                 </td>
                 <td>
-                    <#if !f.directory && f.logFile>
+                    <#if !f.directory>
                         <input type="text" value="" size="10">
-                        <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
+                        <#if f.logFile>
+                            <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
+                        </#if>
+                        <#if !f.logFile>
+                            <a atype="searchLog1" href="javascript:" url="${f.searchGzipLogUrl!}">搜索|前后行数</a>
+                        </#if>
                         <input type="text" value="3" size="1px">
                     </#if>
                 </td>

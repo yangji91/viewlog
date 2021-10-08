@@ -27,6 +27,10 @@ public class DoReq {
                 case GREP:
                     result = "grep -C " + this.length + " " + this.key + " " + this.path;
                     break;
+                case GZIP_DC:
+                    //gzip -dc catalina.out.2021-10-02-01-40.tar.gz | grep -a -C 1 'Exception'
+                    result = "gunzip -dc " + this.path + "| grep -a -C " + this.length + " " + this.key;
+                    break;
             }
         }
         return result;

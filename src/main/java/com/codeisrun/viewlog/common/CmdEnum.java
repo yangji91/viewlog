@@ -1,12 +1,15 @@
 package com.codeisrun.viewlog.common;
 
 /**
+ * 命令类型
+ *
  * @author liubinqiang
  */
 public enum CmdEnum {
     TAIL_F(1),
     TAIL_N(2),
-    GREP(3);
+    GREP(3),
+    GZIP_DC(4);
 
     private int code;
 

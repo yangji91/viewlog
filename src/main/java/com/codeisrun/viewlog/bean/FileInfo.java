@@ -29,6 +29,7 @@ public class FileInfo {
     private String latestNumLogUrl;
     private String fileIcon;
     private String searchLogUrl;
+    private String searchGzipLogUrl;
 
     public String genDirUrl(String path) {
         if (this.isDirectory) {
