@@ -47,7 +47,7 @@
                 </td>
                 <td>
                     <#if !f.directory>
-                        <input type="text" value="" size="10">
+                        <input type="text" value="" size="12">
                         <#if f.logFile>
                             <a atype="searchLog1" href="javascript:" url="${f.searchLogUrl}">搜索|前后行数</a>
                         </#if>
@@ -94,7 +94,12 @@
 
         $("[atype='searchLog1']").click(function () {
             var obj = $(this);
-            openLog(obj.attr("url"), obj.prev().val(), obj.next().val());
+            var key = obj.prev().val();
+            if (key === undefined || key === "") {
+                obj.prev().attr("placeholder", "关键字不能为空");
+                return;
+            }
+            openLog(obj.attr("url"), key, obj.next().val());
         });
     });
 </script>

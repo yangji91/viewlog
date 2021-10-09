@@ -33,6 +33,7 @@ public class ViewLogThread extends Thread {
                 session.sendText(line + "<br>");
             }
         } catch (IOException e) {
+            session.sendText("查看日志工具报错：" + e.toString());
             log.error("读取日志出错：", e);
         }
     }

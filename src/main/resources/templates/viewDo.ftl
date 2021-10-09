@@ -50,11 +50,12 @@
         var p = window.location.protocol === "http:" ? "ws://" : "wss://";
 
         var host = window.location.hostname;
-        if (isValidIP(host)) {
-            url = p + host + ":" + $("#hidWsPort").val() + url;
-        } else {
-            url = p + host + url;
-        }
+        url = p + host + ":" + $("#hidWsPort").val() + url;
+        // if (isValidIP(host)) {
+        //     url = p + host + ":" + $("#hidWsPort").val() + url;
+        // } else {
+        //     url = p + host + url;
+        // }
         var websocket = new WebSocket(url);
         websocket.onmessage = function (event) {
             log(event.data);

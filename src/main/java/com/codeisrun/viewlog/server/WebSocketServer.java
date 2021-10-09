@@ -13,8 +13,11 @@ import org.yeauty.annotation.*;
 import org.yeauty.pojo.ParameterMap;
 import org.yeauty.pojo.Session;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 /**
  * @author liubinqiang
@@ -42,7 +45,10 @@ public class WebSocketServer {
             cmd = LogUtil.urlDecoder(cmd);
             LOGGER.info("执行命令请求：{}", cmd);
             if (viewLogService.verifyCmd(cmd)) {
-                process = Runtime.getRuntime().exec(cmd);
+                String[] commands = {"/bin/sh", "-c", cmd};
+                process = Runtime.getRuntime().exec(commands);
+                //String errorMsg = new BufferedReader(new InputStreamReader(process.getErrorStream())).lines().collect(Collectors.joining());
+                //LOGGER.info("执行命令错误信息：" + errorMsg);
                 inputStream = process.getInputStream();
                 // 一定要启动新的线程，防止InputStream阻塞处理WebSocket的线程
                 ViewLogThread thread = new ViewLogThread(inputStream, session);
@@ -50,7 +56,8 @@ public class WebSocketServer {
             } else {
                 sendMsg(session, "命令不合法：" + cmd);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            sendMsg(session, "查看日志工具报错：" + e.toString());
             LOGGER.error("", e);
         }
     }

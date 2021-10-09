@@ -18,7 +18,8 @@ log-scope: 365
 log-link: <a href="http://localhost:26000/">177服务器</a>
 #配置要查看的日志路径：名称|日志路径
 log-path:
-  demo|D:\log,
+  log|/var/log,
+  work|/home/work
 #spring:
 #  security:
 #    user:
