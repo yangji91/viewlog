@@ -1,10 +1,12 @@
 package com.codeisrun.viewlog.service;
 
-import com.codeisrun.viewlog.bean.LogMenu;
-import com.codeisrun.viewlog.config.SystemConfig;
 import com.codeisrun.viewlog.bean.FileInfo;
 import com.codeisrun.viewlog.bean.LogFileFilter;
 import com.codeisrun.viewlog.bean.LogInfo;
+import com.codeisrun.viewlog.bean.LogMenu;
+import com.codeisrun.viewlog.common.CmdEnum;
+import com.codeisrun.viewlog.config.SystemConfig;
+import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +20,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 读取文件方式，单机版本
+ * 执行ssh命令方式，支持读取远程服务器文件
  *
  * @author liubinqiang
  */
-@Service("viewLogService")
-public class ViewLogServiceImpl implements IViewLogService {
+@Service("sshViewLogService")
+public class SshViewLogServiceImpl implements IViewLogService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ViewLogServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SshViewLogServiceImpl.class);
 
     @Autowired
     private SystemConfig systemConfig;
+
 
     @Override
     public List<LogInfo> getLogInfos(String logPaths) {
@@ -36,55 +39,21 @@ public class ViewLogServiceImpl implements IViewLogService {
         if (logPaths != null) {
             String[] ps = logPaths.split(",");
             for (String p : ps) {
-                if (p != null && p.length() > 0) {
-                    String[] ls = p.split("\\|");
-                    if (ls.length == 2) {
-                        LogInfo info = new LogInfo(ls[0], ls[1], systemConfig.httpPath);
-                        logInfos.add(info);
-                    }
+                LogInfo info = LogInfo.getFromLogPath(p, systemConfig.httpPath);
+                if (info != null) {
+                    logInfos.add(info);
                 }
             }
         }
         return logInfos;
     }
 
+
     @Override
     public List<FileInfo> getFileInfos(String ip, String path) {
-        List<FileInfo> fs = new ArrayList<>();
-        try {
-            if (path != null && path.length() > 0) {
-                File file = new File(path);
-                if (file.isDirectory() && file.listFiles() != null && file.listFiles().length > 0) {
-                    File[] logs = file.listFiles(new LogFileFilter());
-                    if (logs.length > 0) {
-                        for (File log : logs) {
-                            FileInfo info = FileInfo.builder()
-                                    .name(log.getName())
-                                    .path(log.getCanonicalPath())
-                                    .size(LogUtil.getPathSizeAndFileCount(log.getCanonicalPath()))
-                                    .isDirectory(log.isDirectory())
-                                    .isLogFile(LogUtil.isLogFile(log))
-                                    .dirUrl(log.isDirectory() ? (LogUtil.getInfoUrl(log.getCanonicalPath())) : null)
-                                    .modifyTime(LogUtil.timespanToDateStr(log.lastModified()))
-                                    .downloadUrl(systemConfig.httpPath + "/download?path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .openUrl(systemConfig.httpPath + "/open?path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .realTimeLogUrl(systemConfig.httpPath + "/do?code=1&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .latestNumLogUrl(systemConfig.httpPath + "/do?code=2&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .searchLogUrl(systemConfig.httpPath + "/do?code=3&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .searchGzipLogUrl(systemConfig.httpPath + "/do?code=4&path=" + LogUtil.urlEncode(log.getCanonicalPath()))
-                                    .fileIcon(LogUtil.getIcon(log))
-                                    .build();
-                            fs.add(info);
-                        }
-                        fs = fs.stream().sorted(Comparator.comparing(FileInfo::getModifyTime)).collect(Collectors.toList());
-                        Collections.reverse(fs);
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            LOGGER.error("", ex);
-        }
-        return fs;
+        String ret = LinuxUtil.doCmdAndGetStr(ip,
+                systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.LS.getCmdHeader() + path, path);
+        return FileInfo.getListByStr(ret);
     }
 
     @Override

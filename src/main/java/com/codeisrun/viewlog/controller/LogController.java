@@ -37,7 +37,7 @@ public class LogController {
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    private IViewLogService viewLogService;
+    private IViewLogService sshViewLogService;
 
 
     /**
@@ -51,7 +51,7 @@ public class LogController {
     public String index(HttpServletRequest request, ModelMap modelMap) {
         long a = System.currentTimeMillis();
         log.info("访问日志首页收到请求");
-        List<LogInfo> logs = viewLogService.getLogInfos(systemConfig.logPaths);
+        List<LogInfo> logs = sshViewLogService.getLogInfos(systemConfig.logPaths);
         modelMap.put("logs", logs);
         modelMap.put("logLink", systemConfig.logLink);
         log.info("访问日志首页返回，耗时：{}", System.currentTimeMillis() - a);
@@ -59,7 +59,7 @@ public class LogController {
     }
 
     /**
-     * 自定义目录页
+     * 自定义目录页，部署多个站点时候用到
      *
      * @param request
      * @param modelMap
@@ -68,7 +68,7 @@ public class LogController {
     @RequestMapping("menu")
     public String menuIndex(HttpServletRequest request, ModelMap modelMap) {
         log.info("访问日志菜单首页收到请求");
-        HashMap<String, List<LogMenu>> menuItemList = viewLogService.getMenuItemList();
+        HashMap<String, List<LogMenu>> menuItemList = sshViewLogService.getMenuItemList();
         int maxLenght = 0;
         for (List<LogMenu> logs : menuItemList.values()) {
             if (logs.size() > maxLenght) {
@@ -91,8 +91,8 @@ public class LogController {
      * @return
      */
     @RequestMapping("/info")
-    public String logInfo(HttpServletRequest request, ModelMap modelMap, String path) {
-        List<FileInfo> fs = viewLogService.getFileInfos(path);
+    public String logInfo(HttpServletRequest request, ModelMap modelMap, String ip, String path) {
+        List<FileInfo> fs = sshViewLogService.getFileInfos(ip, path);
         modelMap.put("fs", fs);
         modelMap.put("path", LogUtil.getPathHierarchy(path));
         return "fileInfo";
@@ -108,7 +108,7 @@ public class LogController {
      */
     @RequestMapping(value = "/open", produces = MediaType.TEXT_HTML_VALUE)
     public String open(HttpServletRequest request, ModelMap modelMap, String path) {
-        String log = viewLogService.readFile(path);
+        String log = sshViewLogService.readFile(path);
         modelMap.put("log", log);
         modelMap.put("path", path);
         return "viewLog";

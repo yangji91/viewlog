@@ -12,20 +12,24 @@ netty-websocket:
   path: /ws
 #http地址
 http-path: /viewlog
-#可以查看日志文件的范围-多少天以内的
-log-scope: 365
-#日志首页链接
-log-link: <a href="http://localhost:26000/">177服务器</a>
-#配置要查看的日志路径：名称|日志路径
-log-path:
-  log|/var/log,
-  work|/home/work
+#是否需要登录验证
 #spring:
 #  security:
 #    user:
 #      name: admin
 #      password: admin
-#日志主页目录
-log-menu:
-  渠道|APP|http://127.0.0.1:26000/viewlog/info?path=/var/log/,
-  订单|OMS|http://127.0.0.1:26000/viewlog/info?path=/var/log/,
+
+log:
+  #可以查看日志文件的范围-多少天以内的
+  scope: 365
+  #部署多个实例时，日志首页链接，比如：<a href="http://localhost:26000/">177服务器</a>
+  link:
+  #部署多个实例时，日志主页目录，比如：“订单|OMS|http://127.0.0.1:26000/viewlog/info?path=/var/log/,”
+  menu:
+  #服务器信息：ip地址|ssh用户名|密码
+  servers: 192.168.1.10|root|root,
+    192.168.1.12|root|root,
+  #配置要查看的日志路径：分组|名称|ip地址（为空代表本地）|日志路径
+  path: 订单|下单|192.168.1.10|/var/log/aaa,
+    |定时任务|192.168.1.10|/var/log/bbb,
+    营销|活动||/var/log/ccc,

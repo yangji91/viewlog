@@ -1,23 +1,19 @@
 package com.codeisrun.viewlog.server;
 
 import com.codeisrun.viewlog.common.ConstStr;
-import com.codeisrun.viewlog.service.IViewLogService;
+import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yeauty.annotation.*;
 import org.yeauty.pojo.ParameterMap;
 import org.yeauty.pojo.Session;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 
 /**
  * @author liubinqiang
@@ -28,38 +24,15 @@ public class WebSocketServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServer.class);
 
-    @Autowired
-    private IViewLogService viewLogService;
-
-
-    private Process process;
-    private InputStream inputStream;
-
     @OnOpen
     public void onOpen(Session session, HttpHeaders headers, ParameterMap parameterMap) {
         LOGGER.info("---onOpen---收到连接：{},userAgent={},ip={}", getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp));
         sendMsg(session, "websocket连接成功");
-        try {
-            // 执行tail -f命令
-            String cmd = parameterMap.getParameter("cmd");
-            cmd = LogUtil.urlDecoder(cmd);
-            LOGGER.info("执行命令请求：{}", cmd);
-            if (viewLogService.verifyCmd(cmd)) {
-                String[] commands = {"/bin/sh", "-c", cmd};
-                process = Runtime.getRuntime().exec(commands);
-                //String errorMsg = new BufferedReader(new InputStreamReader(process.getErrorStream())).lines().collect(Collectors.joining());
-                //LOGGER.info("执行命令错误信息：" + errorMsg);
-                inputStream = process.getInputStream();
-                // 一定要启动新的线程，防止InputStream阻塞处理WebSocket的线程
-                ViewLogThread thread = new ViewLogThread(inputStream, session);
-                thread.start();
-            } else {
-                sendMsg(session, "命令不合法：" + cmd);
-            }
-        } catch (Exception e) {
-            sendMsg(session, "查看日志工具报错：" + e.toString());
-            LOGGER.error("", e);
-        }
+        String cmd = parameterMap.getParameter("cmd");
+        cmd = LogUtil.urlDecoder(cmd);
+        InputStream inputStream = LinuxUtil.doCmd(cmd, null);
+        ViewLogThread thread = new ViewLogThread(inputStream, session);
+        thread.start();
     }
 
     private void sendMsg(Session session, String msg) {
@@ -79,14 +52,7 @@ public class WebSocketServer {
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        try {
-            if (inputStream != null)
-                inputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (process != null)
-            process.destroy();
+        //TODO 关闭资源
     }
 
     @OnError

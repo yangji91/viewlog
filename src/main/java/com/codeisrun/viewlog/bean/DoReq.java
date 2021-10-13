@@ -3,6 +3,8 @@ package com.codeisrun.viewlog.bean;
 import com.codeisrun.viewlog.common.CmdEnum;
 import lombok.Data;
 
+import static com.codeisrun.viewlog.common.CmdEnum.*;
+
 /**
  * @author liubinqiang
  */
@@ -19,17 +21,16 @@ public class DoReq {
         if (cmdEnum != null) {
             switch (cmdEnum) {
                 case TAIL_F:
-                    result = "tail -f " + this.path;
+                    result = TAIL_F.getCmdHeader() + this.path;
                     break;
                 case TAIL_N:
-                    result = "tail -" + this.length + " " + this.path;
+                    result = TAIL_N.getCmdHeader() + this.length + " " + this.path;
                     break;
                 case GREP:
-                    result = "grep -C " + this.length + " " + this.key + " " + this.path;
+                    result = GREP.getCmdHeader() + this.length + " " + this.key + " " + this.path;
                     break;
                 case GZIP_DC:
-                    //gzip -dc catalina.out.2021-10-02-01-40.tar.gz | grep -a -C 1 'Exception'
-                    result = "gunzip -dc " + this.path + " | grep -aC " + this.length + " " + this.key;
+                    result = GZIP_DC.getCmdHeader() + this.path + " | grep -aC " + this.length + " " + this.key;
                     break;
             }
         }

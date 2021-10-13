@@ -12,6 +12,7 @@
     <table class="table" style="width: 800px">
         <thead>
         <tr>
+            <td>分组</td>
             <td>项目名称</td>
             <td>修改时间</td>
             <td>总大小</td>
@@ -20,13 +21,14 @@
         <#if logs??>
             <#list logs as l>
                 <tr>
+                    <td>${l.groupName!}</td>
                     <td><a target="" href="${l.viewFileInfoUrl}">
                             <img src="${l.fileIcon!}" width="25px"/>
                             ${l.name}
                         </a></td>
                     <td>${l.latestModifyTime!}</td>
-                    <td>${l.fileTotalLength}</td>
-                    <td>${l.fileNum}</td>
+                    <td>${l.fileTotalLength!}</td>
+                    <td>${l.fileNum!}</td>
                 </tr>
             </#list>
         </#if>

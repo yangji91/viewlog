@@ -11,9 +11,15 @@ import java.util.List;
  * @author liubinqiang
  */
 public interface IViewLogService {
+    /**
+     * 日志目录
+     *
+     * @param logPaths
+     * @return
+     */
     List<LogInfo> getLogInfos(String logPaths);
 
-    List<FileInfo> getFileInfos(String path);
+    List<FileInfo> getFileInfos(String ip, String path);
 
     String readFile(String path);
 

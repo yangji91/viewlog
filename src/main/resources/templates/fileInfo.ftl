@@ -70,7 +70,7 @@
                 </td>
                 <td>
                     <#if !f.directory>
-                        <a target="_blank" href="${f.downloadUrl}">下载</a>
+                        <a target="_blank" href="${f.downloadUrl!}">下载</a>
                     </#if>
                 </td>
             </tr>

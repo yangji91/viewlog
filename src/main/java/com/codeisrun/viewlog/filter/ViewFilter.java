@@ -27,7 +27,7 @@ public class ViewFilter implements Filter {
                 USER_AGENT,
                 request.getHeader(USER_AGENT));
         String path = request.getParameter("path");
-        if (path != null && path.length() > 0) {
+/*        if (path != null && path.length() > 0) {
             log.info("请求文件目录：{}", path);
             if (!LogUtil.isLegal(path)) {
                 log.error("请求不合法：{}", path);
@@ -37,7 +37,7 @@ public class ViewFilter implements Filter {
                 response.getWriter().write("请求路径非法");
                 return;
             }
-        }
+        }*/
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

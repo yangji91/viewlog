@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 日志信息
+ * 项目日志信息
  *
  * @author liubinqiang
  */
@@ -17,6 +17,13 @@ public class LogInfo {
     public LogInfo() {
     }
 
+    /**
+     * 本机日志
+     *
+     * @param name
+     * @param logPath
+     * @param httpPath
+     */
     public LogInfo(String name, String logPath, String httpPath) {
         this.name = name;
         this.logPath = logPath;
@@ -34,6 +41,27 @@ public class LogInfo {
 //        }
     }
 
+    public static LogInfo getFromLogPath(String logPath, String httpPath) {
+        if (logPath != null && logPath.length() > 0) {
+            String[] ls = logPath.split("\\|");
+            if (ls.length == 4) {
+                LogInfo info = new LogInfo();
+                info.setGroupName(ls[0]);
+                info.setName(ls[1]);
+                info.setServerIp(ls[2]);
+                info.setLogPath(ls[3]);
+                info.viewFileInfoUrl = httpPath + "/info?ip=" + LogUtil.urlEncode(info.getServerIp()) + "&path=" + LogUtil.urlEncode(info.getLogPath());
+                return info;
+            }
+        }
+        return null;
+    }
+
+    private String serverIp;
+    /**
+     * 分组名称
+     */
+    private String groupName;
     /**
      * 项目名称
      */
