@@ -6,36 +6,33 @@ import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.yeauty.annotation.*;
-import org.yeauty.pojo.ParameterMap;
 import org.yeauty.pojo.Session;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @author liubinqiang
  */
-@ServerEndpoint(prefix = "netty-websocket")
+@Slf4j
+@ServerEndpoint(path = "${netty-websocket.path}", port = "${netty-websocket.port}")
 @Component
 public class WebSocketServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServer.class);
 
     @Autowired
     private SystemConfig systemConfig;
 
     @OnOpen
-    public void onOpen(Session session, HttpHeaders headers, ParameterMap parameterMap) {
-        LOGGER.info("---onOpen---收到连接：{},userAgent={},ip={}", getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp));
+    public void onOpen(Session session, HttpHeaders headers, @RequestParam String ip, @RequestParam String cmd, @RequestParam String path) {
+        log.info("---onOpen---收到连接：{},userAgent={},X-Real-IP={},ip={},cmd={},path={}",
+                getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp), ip, cmd, path);
         sendMsg(session, "websocket连接成功");
-        String ip = parameterMap.getParameter("ip");
-        String cmd = parameterMap.getParameter("cmd");
-        String path = parameterMap.getParameter("path");
         cmd = LogUtil.urlDecoder(cmd);
         InputStream inputStream = LinuxUtil.doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
         ViewLogThread thread = new ViewLogThread(inputStream, session);
@@ -58,18 +55,19 @@ public class WebSocketServer {
     }
 
     @OnClose
-    public void onClose(Session session) throws IOException {
+    public void onClose(Session session) {
         //TODO 关闭资源
+        log.info("关闭连接：{}", session);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        throwable.printStackTrace();
+        log.info("连接报错：{}", session);
     }
 
     @OnMessage
     public void onMessage(Session session, String message) {
-        System.out.println(message);
+        log.info("收到消息：{}", message);
         session.sendText("Hello Netty!");
     }
 

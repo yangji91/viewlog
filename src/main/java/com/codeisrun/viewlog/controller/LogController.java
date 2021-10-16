@@ -44,7 +44,7 @@ public class LogController {
      * @param modelMap
      * @return
      */
-    @RequestMapping("")
+    @RequestMapping(path = {"", "/menu"})
     public String index(HttpServletRequest request, ModelMap modelMap) {
         long a = System.currentTimeMillis();
         log.info("访问日志首页收到请求");
