@@ -1,10 +1,8 @@
 package com.codeisrun.viewlog.service;
 
 import com.codeisrun.viewlog.bean.FileInfo;
-import com.codeisrun.viewlog.bean.LogInfo;
-import com.codeisrun.viewlog.bean.LogMenu;
+import com.codeisrun.viewlog.bean.Project;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -17,13 +15,8 @@ public interface IViewLogService {
      * @param logPaths
      * @return
      */
-    List<LogInfo> getLogInfos(String logPaths);
+    List<Project> getLogInfos();
 
     List<FileInfo> getFileInfos(String ip, String path);
 
-    String readFile(String path);
-
-    boolean verifyCmd(String cmd);
-
-    LinkedHashMap<String, List<LogMenu>> getMenuItemList();
 }

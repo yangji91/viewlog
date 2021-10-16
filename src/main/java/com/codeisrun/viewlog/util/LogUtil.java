@@ -30,17 +30,6 @@ public class LogUtil {
     private static float KB = 1024;
     private static float MB = 1024 * 1024;
 
-    /**
-     * 查看日志文件范围
-     *
-     * @param fileEditTime
-     * @return
-     */
-    public static boolean isInScope(long fileEditTime) {
-        long a = 3600;
-        long startTime = System.currentTimeMillis() - (24 * a * 1000 * systemConfig.logScope);
-        return fileEditTime > startTime;
-    }
 
     public static String dateFormat(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -59,10 +48,6 @@ public class LogUtil {
         }
     }
 
-    public static String timespanToDateStr(long timespan) {
-        Date date = new Date(timespan);
-        return dateFormat(date);
-    }
 
     public static String urlDecoder(String str) {
         try {
@@ -213,10 +198,6 @@ public class LogUtil {
         }
     }
 
-    public static String getIcon(String path) {
-        File file = new File(path);
-        return getIcon(file);
-    }
 
     /**
      * 获取日志目录
@@ -239,17 +220,6 @@ public class LogUtil {
         return logs;
     }
 
-    public static boolean isLegal(String path) {
-        if (path != null) {
-            Map<String, String> logs = getLogInfos();
-            for (String s : logs.values()) {
-                if (path.startsWith(s)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * 日志目录分层
@@ -284,27 +254,6 @@ public class LogUtil {
     }
 
     public static String getInfoUrl(String path) {
-        return systemConfig.httpPath + "/info?path=" + LogUtil.urlEncode(path);
-    }
-
-    public static String getPathSizeAndFileCount(String path) {
-        String result = "";
-        File file = new File(path);
-        if (file.exists()) {
-            result = bytesToView(getFileLength(path));
-            if (file.isDirectory()) {
-                int[] numbers = getFileNumber(path);
-                result = result + " (" + numbers[0] + "个文件)";
-            }
-        }
-        return result;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(System.getProperty("os.name"));
-        String a1 = "D:\\var\\log\\rft-boss\\uaps-app-order-polling.2019-11-29.log";
-        String a = "/home/roncoo/pay/app/order-polling/logs/backup/2019-12-15-08-04";
-        String[] bs = a.split("/");
-        System.out.println(bs.length);
+        return "/viewlog/info?path=" + LogUtil.urlEncode(path);
     }
 }

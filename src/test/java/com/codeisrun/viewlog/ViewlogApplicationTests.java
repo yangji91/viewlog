@@ -1,6 +1,5 @@
 package com.codeisrun.viewlog;
 
-import com.codeisrun.viewlog.bean.LogInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,14 +15,6 @@ public class ViewlogApplicationTests {
 
     @Test
     public void contextLoads() {
-    }
-
-    @Test
-    public void test() {
-        LogInfo logInfo = new LogInfo();
-        logInfo.setLogPath("D:\\var\\logs");
-        String aaa = logInfo.getLatestFile();
-        LOGGER.info(aaa);
     }
 
 }

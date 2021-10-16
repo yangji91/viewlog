@@ -23,7 +23,7 @@
             <td>文件名称</td>
             <td>大小</td>
             <td>修改时间</td>
-            <td>查看实时日志</td>
+            <td>实时日志</td>
             <td>搜索日志</td>
             <td>最新n行日志</td>
 <#--            <td>下载</td>-->
@@ -41,7 +41,7 @@
                 <td>${f.modifyTime}</td>
                 <td>
                     <#if f.realTimeLogUrl?? && !f.directory && f.logFile>
-                        <a target="_blank" href="${f.realTimeLogUrl}">查看实时日志</a>
+                        <a target="_blank" href="${f.realTimeLogUrl}">实时日志</a>
                     </#if>
                 </td>
                 <td>
@@ -53,7 +53,7 @@
                         <#if !f.logFile>
                             <a atype="searchLog1" href="javascript:" url="${f.searchGzipLogUrl!}">搜索|前后行数</a>
                         </#if>
-                        <input type="text" value="3" size="1px">
+                        <input type="text" value="5" size="1px">
                     </#if>
                 </td>
                 <td>
