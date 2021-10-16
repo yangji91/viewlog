@@ -1,6 +1,7 @@
 package com.codeisrun.viewlog.util;
 
 import com.codeisrun.viewlog.bean.DirInfo;
+import com.codeisrun.viewlog.bean.FileInfo;
 import com.codeisrun.viewlog.common.ConstStr;
 import com.codeisrun.viewlog.config.SystemConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,6 +173,19 @@ public class LogUtil {
         return true;
     }
 
+    public static boolean isLogFile(FileInfo fileInfo) {
+        if (fileInfo.isDirectory()) {
+            return false;
+        } else {
+            if (isCompressFile(fileInfo.getName())) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+
     public static String getIcon(File file) {
         if (file.exists()) {
             if (file.isDirectory()) {
@@ -185,6 +199,18 @@ public class LogUtil {
             }
         }
         return null;
+    }
+
+    public static String getIcon(FileInfo fileInfo) {
+        if (fileInfo.isDirectory()) {
+            return ConstStr.iconFolder;
+        } else {
+            if (isCompressFile(fileInfo.getName())) {
+                return ConstStr.iconZip;
+            } else {
+                return ConstStr.iconLog;
+            }
+        }
     }
 
     public static String getIcon(String path) {

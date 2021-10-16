@@ -53,7 +53,20 @@ public class SshViewLogServiceImpl implements IViewLogService {
     public List<FileInfo> getFileInfos(String ip, String path) {
         String ret = LinuxUtil.doCmdAndGetStr(ip,
                 systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.LS.getCmdHeader() + path, path);
-        return FileInfo.getListByStr(ret);
+        List<FileInfo> fileInfos = FileInfo.getListByStr(ret);
+        for (FileInfo f : fileInfos) {
+            String subPath = path + File.separator + f.getName();
+            f.setPath(subPath);
+            f.setDownloadUrl((systemConfig.httpPath + "/download?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath)));
+            f.setOpenUrl(systemConfig.httpPath + "/open?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath));
+            f.setRealTimeLogUrl(systemConfig.httpPath + "/do?ip=" + ip + "&code=1&path=" + LogUtil.urlEncode(subPath));
+            f.setLatestNumLogUrl(systemConfig.httpPath + "/do?ip=" + ip + "&code=2&path=" + LogUtil.urlEncode(subPath));
+            f.setSearchLogUrl(systemConfig.httpPath + "/do?ip=" + ip + "&code=3&path=" + LogUtil.urlEncode(subPath));
+            f.setSearchGzipLogUrl(systemConfig.httpPath + "/do?ip=" + ip + "&code=4&path=" + LogUtil.urlEncode(subPath));
+            f.setFileIcon(LogUtil.getIcon(f));
+            f.setLogFile(LogUtil.isLogFile(f));
+        }
+        return fileInfos;
     }
 
     @Override

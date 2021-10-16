@@ -10,7 +10,7 @@ public enum CmdEnum {
     TAIL_N(2, "tail -"),
     GREP(3, "grep -C "),
     GZIP_DC(4, "gunzip -dc "),
-    LS(5, "ls -lh --time-style '+%Y-%m-%d %H:%M:%S' ");
+    LS(5, "ls -lht --time-style '+%Y-%m-%d %H:%M:%S' ");
 
     private Integer code;
     private String cmdHeader;

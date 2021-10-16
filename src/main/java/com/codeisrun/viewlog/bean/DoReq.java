@@ -10,6 +10,7 @@ import static com.codeisrun.viewlog.common.CmdEnum.*;
  */
 @Data
 public class DoReq {
+    private String ip;
     private int code;
     private String path;
     private int length;

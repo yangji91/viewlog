@@ -1,12 +1,14 @@
 package com.codeisrun.viewlog.server;
 
 import com.codeisrun.viewlog.common.ConstStr;
+import com.codeisrun.viewlog.config.SystemConfig;
 import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yeauty.annotation.*;
 import org.yeauty.pojo.ParameterMap;
@@ -24,13 +26,18 @@ public class WebSocketServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketServer.class);
 
+    @Autowired
+    private SystemConfig systemConfig;
+
     @OnOpen
     public void onOpen(Session session, HttpHeaders headers, ParameterMap parameterMap) {
         LOGGER.info("---onOpen---收到连接：{},userAgent={},ip={}", getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp));
         sendMsg(session, "websocket连接成功");
+        String ip = parameterMap.getParameter("ip");
         String cmd = parameterMap.getParameter("cmd");
+        String path = parameterMap.getParameter("path");
         cmd = LogUtil.urlDecoder(cmd);
-        InputStream inputStream = LinuxUtil.doCmd(cmd, null);
+        InputStream inputStream = LinuxUtil.doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
         ViewLogThread thread = new ViewLogThread(inputStream, session);
         thread.start();
     }

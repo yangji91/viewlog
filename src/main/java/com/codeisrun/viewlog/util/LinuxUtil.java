@@ -36,15 +36,17 @@ public class LinuxUtil {
         }
     }
 
-    public static InputStream doCmd(String cmd, String path) {
+    private static InputStream doCmd(String cmd, String path) {
+        //log.info("执行命令：{}", cmd);
         if (verifyCmd(cmd, path)) {
             String[] commands = {"/bin/sh", "-c", cmd};
             Process process = null;
             try {
                 process = Runtime.getRuntime().exec(commands);
-                log.info("process.waitFor={}", process.waitFor());
-                String errorMsg = new BufferedReader(new InputStreamReader(process.getErrorStream())).lines().collect(Collectors.joining("\n"));
-                log.info("执行命令是否有错误信息：{}", errorMsg);
+                //log.info("process.waitFor={}", process.waitFor());
+                //在执行实时日志的时候不能打印
+                //String errorMsg = new BufferedReader(new InputStreamReader(process.getErrorStream())).lines().collect(Collectors.joining("\n"));
+                //log.info("执行命令是否有错误信息：{}", errorMsg);
                 InputStream inputStream = process.getInputStream();
                 return inputStream;
             } catch (Exception e) {

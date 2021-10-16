@@ -169,7 +169,7 @@ public class LogController {
 
 
     /**
-     * 执行命令
+     * 执行命令，前端页面发送websocket连接，把参数传给后端，后端执行命令，前端通过websocket接收日志
      *
      * @param request
      * @param modelMap
@@ -178,8 +178,10 @@ public class LogController {
     @RequestMapping("/do")
     public String viewDo(HttpServletRequest request, ModelMap modelMap, DoReq req) {
         StringBuilder sb = new StringBuilder();
-        sb.append(systemConfig.wsPath).append("?cmd=");
-        sb.append(req.getCmd());
+        sb.append(systemConfig.wsPath)
+                .append("?ip=").append(req.getIp())
+                .append("&cmd=").append(req.getCmd())
+                .append("&path=").append(req.getPath());
         String wsUrl = sb.toString();
         log.info("ws地址：{}", wsUrl);
         modelMap.put("wsUrl", wsUrl);

@@ -8,7 +8,7 @@
 </head>
 <body>
 <div>
-    <h3><a href="/">Home</a>
+    <h3><a href="/">查看日志</a>
         <#if path??>
             <#list path as item>
                 > <a href="${item.url}">${item.name}</a>
@@ -23,17 +23,16 @@
             <td>文件名称</td>
             <td>大小</td>
             <td>修改时间</td>
-            <td>查看1</td>
-            <td>查看2</td>
-            <td>查看3</td>
-            <td>查看4</td>
-            <td>查看5</td>
+            <td>查看实时日志</td>
+            <td>搜索日志</td>
+            <td>最新n行日志</td>
+<#--            <td>下载</td>-->
         </tr>
         <#list fs as f>
             <tr>
                 <td>
                     <#if f.directory>
-                        <a href="${f.dirUrl}"> <img src="${f.fileIcon!}" width="25px"/>${f.name}</a>
+                        <a href="${f.dirUrl!}"> <img src="${f.fileIcon!}" width="25px"/>${f.name}</a>
                     <#else>
                         <img src="${f.fileIcon!}" width="25px"/>${f.name}
                     </#if>
@@ -59,20 +58,15 @@
                 </td>
                 <td>
                     <#if !f.directory && f.logFile>
-                        <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">查看最后n行日志</a>
+                        <a atype="latestNum1" href="javascript:" url="${f.latestNumLogUrl}">查看最新n行日志</a>
                         <input type="text" value="200" size="1">
                     </#if>
                 </td>
-                <td>
-                    <#if !f.directory && f.logFile>
-                        <a target="_blank" href="${f.openUrl}">查看全部</a>
-                    </#if>
-                </td>
-                <td>
-                    <#if !f.directory>
-                        <a target="_blank" href="${f.downloadUrl!}">下载</a>
-                    </#if>
-                </td>
+<#--                <td>-->
+<#--                    <#if !f.directory>-->
+<#--                        <a target="_blank" href="${f.downloadUrl!}">下载</a>-->
+<#--                    </#if>-->
+<#--                </td>-->
             </tr>
         </#list>
         </thead>
