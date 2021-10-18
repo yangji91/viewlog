@@ -19,44 +19,53 @@ import java.util.stream.Collectors;
 public class LinuxUtil {
 
     public static String doCmdAndGetStr(String serverIp, String user, String pwd, String cmd, String path) throws Exception {
-        InputStream inputStream = doCmd(serverIp, user, pwd, cmd, path);
-        if (inputStream == null) {
-            return null;
-        }
-        String result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
-        log.info("\n执行命令：{}\n响应：{}", cmd, result);
-        return result;
-    }
-
-    public static InputStream doCmd(String serverIp, String user, String pwd, String cmd, String path) throws Exception {
         if (!verifyCmd(cmd)) {
             log.error("不支持该命令：ip={},cmd={}", serverIp, cmd);
             throw new Exception("不支持该命令");
         }
-        if (serverIp == null) {
-            return doCmd(cmd, path);
-        } else {
+        if (serverIp != null) {
             //执行远程命令
             //sshpass -p root ssh root@192.168.0.8 "ll"
-            return doCmd(String.format("sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s \"%s\"", pwd, user, serverIp, cmd), path);
+            cmd = String.format("sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s \"%s\"", pwd, user, serverIp, cmd);
         }
-    }
-
-    private static InputStream doCmd(String cmd, String path) throws IOException {
         //log.info("执行命令：{}", cmd);
         String[] commands = {"/bin/sh", "-c", cmd};
         Process process = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
         try {
             process = Runtime.getRuntime().exec(commands);
             //log.info("process.waitFor={}", process.waitFor());
             //在执行实时日志的时候不能打印
             //String errorMsg = new BufferedReader(new InputStreamReader(process.getErrorStream())).lines().collect(Collectors.joining("\n"));
             //log.info("执行命令是否有错误信息：{}", errorMsg);
-            InputStream inputStream = process.getInputStream();
-            return inputStream;
+            inputStream = process.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            String result = bufferedReader.lines().collect(Collectors.joining("\n"));
+            log.info("\n执行命令：{}\n响应：{}", cmd, result);
+            return result;
         } catch (Exception e) {
             log.error("执行命令报错：", e);
             throw e;
+        } finally {
+            if (inputStreamReader != null) {
+                log.info("释放资源inputStreamReader.hashCode={}", inputStreamReader.hashCode());
+                inputStreamReader.close();
+            }
+            if (bufferedReader != null) {
+                log.info("释放资源bufferedReader.hashCode={}", bufferedReader.hashCode());
+                bufferedReader.close();
+            }
+            if (inputStream != null) {
+                log.info("释放资源inputStream.hashCode={}", inputStream.hashCode());
+                inputStream.close();
+            }
+            if (process != null) {
+                log.info("释放资源process.hashCode={}", process.hashCode());
+                process.destroy();
+            }
         }
     }
 

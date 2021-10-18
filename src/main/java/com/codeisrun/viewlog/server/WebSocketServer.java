@@ -14,8 +14,11 @@ import org.springframework.util.MultiValueMap;
 import org.yeauty.annotation.*;
 import org.yeauty.pojo.Session;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author liubinqiang
@@ -31,6 +34,11 @@ public class WebSocketServer {
     @Autowired
     private IViewLogService viewLogService;
 
+    private Process process = null;
+    private InputStream inputStream = null;
+    private InputStreamReader inputStreamReader = null;
+    private BufferedReader bufferedReader = null;
+
     @OnOpen
     public void onOpen(Session session, HttpHeaders headers, @RequestParam String ip, @RequestParam String cmd, @RequestParam String path) {
         log.info("---onOpen---收到连接：{},userAgent={},X-Real-IP={},ip={},cmd={},path={}",
@@ -42,13 +50,40 @@ public class WebSocketServer {
         cmd = LogUtil.urlDecoder(cmd);
         InputStream inputStream = null;
         try {
-            inputStream = LinuxUtil.doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
+            inputStream = doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
         } catch (Exception e) {
             log.error("查看日志报错：{}", e);
             sendMsg(session, e.getMessage());
         }
         ViewLogThread thread = new ViewLogThread(inputStream, session);
         thread.start();
+    }
+
+    private InputStream doCmd(String serverIp, String user, String pwd, String cmd, String path) throws Exception {
+        if (!LinuxUtil.verifyCmd(cmd)) {
+            log.error("不支持该命令：ip={},cmd={}", serverIp, cmd);
+            throw new Exception("不支持该命令");
+        }
+        if (serverIp != null) {
+            //执行远程命令
+            //sshpass -p root ssh root@192.168.0.8 "ll"
+            cmd = String.format("sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s \"%s\"", pwd, user, serverIp, cmd);
+        }
+        //log.info("执行命令：{}", cmd);
+        String[] commands = {"/bin/sh", "-c", cmd};
+
+        try {
+            process = Runtime.getRuntime().exec(commands);
+            //log.info("process.waitFor={}", process.waitFor());
+            //在执行实时日志的时候不能打印
+            //String errorMsg = new BufferedReader(new InputStreamReader(process.getErrorStream())).lines().collect(Collectors.joining("\n"));
+            //log.info("执行命令是否有错误信息：{}", errorMsg);
+            inputStream = process.getInputStream();
+            return inputStream;
+        } catch (Exception e) {
+            log.error("执行命令报错：", e);
+            throw e;
+        }
     }
 
     private void sendMsg(Session session, String msg) {
@@ -69,7 +104,27 @@ public class WebSocketServer {
     @OnClose
     public void onClose(Session session) {
         //TODO 关闭资源
-        log.info("关闭连接：{}", session);
+        log.info("关闭连接收到请求：{}", session);
+        try {
+            if (inputStreamReader != null) {
+                log.info("释放资源inputStreamReader.hashCode={}", inputStreamReader.hashCode());
+                inputStreamReader.close();
+            }
+            if (bufferedReader != null) {
+                log.info("释放资源bufferedReader.hashCode={}", bufferedReader.hashCode());
+                bufferedReader.close();
+            }
+            if (inputStream != null) {
+                log.info("释放资源inputStream.hashCode={}", inputStream.hashCode());
+                inputStream.close();
+            }
+            if (process != null) {
+                log.info("释放资源process.hashCode={}", process.hashCode());
+                process.destroy();
+            }
+        } catch (Exception exception) {
+            log.error("释放资源报错：", exception);
+        }
     }
 
     @OnError
