@@ -6,6 +6,8 @@ import lombok.Data;
 import static com.codeisrun.viewlog.common.CmdEnum.*;
 
 /**
+ * 执行命令请求
+ *
  * @author liubinqiang
  */
 @Data

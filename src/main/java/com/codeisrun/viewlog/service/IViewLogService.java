@@ -2,6 +2,7 @@ package com.codeisrun.viewlog.service;
 
 import com.codeisrun.viewlog.bean.FileInfo;
 import com.codeisrun.viewlog.bean.Project;
+import com.codeisrun.viewlog.bean.ProjectFileInfo;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ public interface IViewLogService {
     /**
      * 日志目录
      *
-     * @param logPaths
      * @return
      */
-    List<Project> getLogInfos();
+    List<Project> getProjectList();
 
-    List<FileInfo> getFileInfos(String ip, String path);
+    ProjectFileInfo getFileInfos(String ip, String path);
 
+    boolean verifyPath(String ip, String path);
 }

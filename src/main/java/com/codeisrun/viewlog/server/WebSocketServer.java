@@ -2,6 +2,7 @@ package com.codeisrun.viewlog.server;
 
 import com.codeisrun.viewlog.common.ConstStr;
 import com.codeisrun.viewlog.config.SystemConfig;
+import com.codeisrun.viewlog.service.IViewLogService;
 import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -27,14 +28,25 @@ public class WebSocketServer {
 
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private IViewLogService viewLogService;
 
     @OnOpen
     public void onOpen(Session session, HttpHeaders headers, @RequestParam String ip, @RequestParam String cmd, @RequestParam String path) {
         log.info("---onOpen---收到连接：{},userAgent={},X-Real-IP={},ip={},cmd={},path={}",
                 getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp), ip, cmd, path);
         sendMsg(session, "websocket连接成功");
+        if (!viewLogService.verifyPath(ip, path)) {
+            sendMsg(session, "文件路径不支持");
+        }
         cmd = LogUtil.urlDecoder(cmd);
-        InputStream inputStream = LinuxUtil.doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
+        InputStream inputStream = null;
+        try {
+            inputStream = LinuxUtil.doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
+        } catch (Exception e) {
+            log.error("查看日志报错：{}", e);
+            sendMsg(session, e.getMessage());
+        }
         ViewLogThread thread = new ViewLogThread(inputStream, session);
         thread.start();
     }

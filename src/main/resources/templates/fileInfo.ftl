@@ -8,13 +8,7 @@
 </head>
 <body>
 <div>
-    <h3><a href="/">查看日志</a>
-        <#if path??>
-            <#list path as item>
-                > <a href="${item.url}">${item.name}</a>
-            </#list>
-        </#if>
-    </h3>
+    <a href="/" style="font-size: xx-large">查看日志</a> >${name!}>${ip!}>${fs.totalSize!}
 </div>
 <div>
     <table class="table" style="width: 1500px">
@@ -26,9 +20,9 @@
             <td>实时日志</td>
             <td>搜索日志</td>
             <td>最新n行日志</td>
-<#--            <td>下载</td>-->
+            <#--            <td>下载</td>-->
         </tr>
-        <#list fs as f>
+        <#list fs.fileInfoList! as f>
             <tr>
                 <td>
                     <#if f.directory>
@@ -62,11 +56,11 @@
                         <input type="text" value="200" size="1">
                     </#if>
                 </td>
-<#--                <td>-->
-<#--                    <#if !f.directory>-->
-<#--                        <a target="_blank" href="${f.downloadUrl!}">下载</a>-->
-<#--                    </#if>-->
-<#--                </td>-->
+                <#--                <td>-->
+                <#--                    <#if !f.directory>-->
+                <#--                        <a target="_blank" href="${f.downloadUrl!}">下载</a>-->
+                <#--                    </#if>-->
+                <#--                </td>-->
             </tr>
         </#list>
         </thead>

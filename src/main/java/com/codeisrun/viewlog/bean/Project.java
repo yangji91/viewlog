@@ -4,7 +4,6 @@ import com.codeisrun.viewlog.util.LogUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class Project {
                 Project info = new Project();
                 info.setGroupName(ls[0]);
                 info.setName(ls[1]);
-                info.setNodeList(ProjectNode.genList(ls[2]));
+                info.setNodeList(ProjectNode.genList(ls[2], info.getName()));
                 return info;
             }
         }
@@ -44,7 +43,7 @@ public class Project {
 
     @Data
     public static class ProjectNode {
-        public static List<ProjectNode> genList(String config) {
+        public static List<ProjectNode> genList(String config, String name) {
             List<ProjectNode> list = new ArrayList<>();
             if (config != null) {
                 String[] nodes = config.split("\\^");
@@ -61,12 +60,11 @@ public class Project {
                                 }
                             }
                             info.setLogPath(items[1].trim());
-                            info.viewFileInfoUrl = "/viewlog/info?ip=" + LogUtil.urlEncode(info.getIp()) + "&path=" + LogUtil.urlEncode(info.getLogPath());
+                            info.viewFileInfoUrl = String.format("/viewlog/info?ip=%s&path=%s&name=%s", info.getIp(), LogUtil.urlEncode(info.getLogPath()), name);
                             list.add(info);
                         }
                     }
                 }
-
             }
             return list;
         }

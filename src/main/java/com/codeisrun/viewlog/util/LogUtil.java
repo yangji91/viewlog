@@ -1,6 +1,5 @@
 package com.codeisrun.viewlog.util;
 
-import com.codeisrun.viewlog.bean.DirInfo;
 import com.codeisrun.viewlog.bean.FileInfo;
 import com.codeisrun.viewlog.common.ConstStr;
 import com.codeisrun.viewlog.config.SystemConfig;
@@ -218,42 +217,5 @@ public class LogUtil {
             }
         }
         return logs;
-    }
-
-
-    /**
-     * 日志目录分层
-     *
-     * @param path
-     * @return
-     */
-    public static List<DirInfo> getPathHierarchy(String path) {
-        List<DirInfo> ds = new ArrayList<>();
-        if (path != null && path.length() > 0) {
-            Map<String, String> logs = getLogInfos();
-            for (String s : logs.values()) {
-                if (path.startsWith(s)) {
-                    ds.add(new DirInfo(s, getInfoUrl(s)));
-                    if (path.length() > s.length()) {
-                        path = path.substring(s.length());
-                        String sp = System.getProperty("os.name").contains("Windows") ? (File.separator + File.separator) : File.separator;
-                        String[] ps = path.split(sp);
-                        String currentPath = s;
-                        for (String p : ps) {
-                            if (p != null && p.length() > 0) {
-                                currentPath = currentPath + File.separator + p;
-                                ds.add(new DirInfo(p, getInfoUrl(currentPath)));
-                            }
-                        }
-                    }
-                    return ds;
-                }
-            }
-        }
-        return ds;
-    }
-
-    public static String getInfoUrl(String path) {
-        return "/viewlog/info?path=" + LogUtil.urlEncode(path);
     }
 }

@@ -1,9 +1,9 @@
 package com.codeisrun.viewlog.controller;
 
 import com.codeisrun.viewlog.bean.DoReq;
+import com.codeisrun.viewlog.bean.ProjectFileInfo;
 import com.codeisrun.viewlog.config.SystemConfig;
 import com.codeisrun.viewlog.service.IViewLogService;
-import com.codeisrun.viewlog.bean.FileInfo;
 import com.codeisrun.viewlog.bean.Project;
 import com.codeisrun.viewlog.util.LogUtil;
 import com.codeisrun.viewlog.util.ZipUtil;
@@ -35,7 +35,7 @@ public class LogController {
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    private IViewLogService sshViewLogService;
+    private IViewLogService viewLogService;
 
     /**
      * 主页
@@ -48,7 +48,7 @@ public class LogController {
     public String index(HttpServletRequest request, ModelMap modelMap) {
         long a = System.currentTimeMillis();
         log.info("访问日志首页收到请求");
-        List<Project> logs = sshViewLogService.getLogInfos();
+        List<Project> logs = viewLogService.getProjectList();
         modelMap.put("logs", logs);
         log.info("访问日志首页返回，耗时：{}", System.currentTimeMillis() - a);
         return "menu";
@@ -63,10 +63,11 @@ public class LogController {
      * @return
      */
     @RequestMapping("/info")
-    public String logInfo(HttpServletRequest request, ModelMap modelMap, String ip, String path) {
-        List<FileInfo> fs = sshViewLogService.getFileInfos(ip, path);
+    public String logInfo(HttpServletRequest request, ModelMap modelMap, String name, String ip, String path) {
+        ProjectFileInfo fs = viewLogService.getFileInfos(ip, path);
         modelMap.put("fs", fs);
-        modelMap.put("path", LogUtil.getPathHierarchy(path));
+        modelMap.put("name", name);
+        modelMap.put("ip", ip);
         return "fileInfo";
     }
 
