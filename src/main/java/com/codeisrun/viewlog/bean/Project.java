@@ -54,8 +54,10 @@ public class Project {
                             ProjectNode info = new ProjectNode();
                             if (items[0] != null) {
                                 String[] envIp = items[0].split("-");
-                                if (envIp.length == 2) {
+                                if (envIp.length > 0) {
                                     info.setEnv(envIp[0]);
+                                }
+                                if (envIp.length > 1) {
                                     info.setIp(envIp[1]);
                                 }
                             }
@@ -73,6 +75,7 @@ public class Project {
          * 哪个环境
          */
         private String env;
+
         /**
          * 服务器地址
          */
@@ -85,6 +88,18 @@ public class Project {
          * 查看所有日志文件地址
          */
         private String viewFileInfoUrl;
+
+        public String getIp() {
+            return ip == null ? "" : ip;
+        }
+
+        public String getViewIp() {
+            if (ip != null && ip.length() > 0) {
+                return ip;
+            } else {
+                return "本机";
+            }
+        }
     }
 
 }

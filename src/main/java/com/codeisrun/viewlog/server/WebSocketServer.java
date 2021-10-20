@@ -48,15 +48,21 @@ public class WebSocketServer {
             sendMsg(session, "文件路径不支持");
         }
         cmd = LogUtil.urlDecoder(cmd);
-        InputStream inputStream = null;
         try {
             inputStream = doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            ViewLogThread viewLogThread = new ViewLogThread(bufferedReader, session);
+            log.info("当前线程：{}-{}\n创建ViewLogThread：{}-{}\nactiveCount：{}", Thread.currentThread().getId(),
+                    Thread.currentThread().getName(),
+                    viewLogThread.getId(),
+                    viewLogThread.getName(),
+                    Thread.activeCount());
+            viewLogThread.start();
         } catch (Exception e) {
-            log.error("查看日志报错：{}", e);
+            log.error("查看日志报错：", e);
             sendMsg(session, e.getMessage());
         }
-        ViewLogThread thread = new ViewLogThread(inputStream, session);
-        thread.start();
     }
 
     private InputStream doCmd(String serverIp, String user, String pwd, String cmd, String path) throws Exception {
@@ -121,6 +127,10 @@ public class WebSocketServer {
             if (process != null) {
                 log.info("释放资源process.hashCode={}", process.hashCode());
                 process.destroy();
+            }
+            if (session != null) {
+                log.info("释放资源process.hashCode={}", session.hashCode());
+                session.close();
             }
         } catch (Exception exception) {
             log.error("释放资源报错：", exception);

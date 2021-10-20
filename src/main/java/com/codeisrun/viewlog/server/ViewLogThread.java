@@ -15,19 +15,20 @@ import java.io.InputStreamReader;
 @Slf4j
 public class ViewLogThread extends Thread {
 
-    private BufferedReader reader;
+    private BufferedReader bufferedReader;
     private Session session;
 
-    public ViewLogThread(InputStream in, Session session) {
-        this.reader = new BufferedReader(new InputStreamReader(in));
+    public ViewLogThread(BufferedReader bufferedReader, Session session) {
+        this.bufferedReader = bufferedReader;
         this.session = session;
     }
 
     @Override
     public void run() {
+        log.info("当前查看日志线程：ViewLogThread={}-{}", Thread.currentThread().getId(), Thread.currentThread().getName());
         String line;
         try {
-            while ((line = reader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 session.sendText(line + "<br>");
             }
         } catch (IOException e) {

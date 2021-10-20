@@ -23,7 +23,7 @@ public class LinuxUtil {
             log.error("不支持该命令：ip={},cmd={}", serverIp, cmd);
             throw new Exception("不支持该命令");
         }
-        if (serverIp != null) {
+        if (serverIp != null && serverIp.length() > 0) {
             //执行远程命令
             //sshpass -p root ssh root@192.168.0.8 "ll"
             cmd = String.format("sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s \"%s\"", pwd, user, serverIp, cmd);
