@@ -1,5 +1,6 @@
 package com.codeisrun.viewlog.server;
 
+import com.codeisrun.viewlog.common.CmdEnum;
 import com.codeisrun.viewlog.common.ConstStr;
 import com.codeisrun.viewlog.config.SystemConfig;
 import com.codeisrun.viewlog.service.IViewLogService;
@@ -43,7 +44,7 @@ public class WebSocketServer {
     public void onOpen(Session session, HttpHeaders headers, @RequestParam String ip, @RequestParam String cmd, @RequestParam String path) {
         log.info("---onOpen---收到连接：{},userAgent={},X-Real-IP={},ip={},cmd={},path={}",
                 getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp), ip, cmd, path);
-        sendMsg(session, "websocket连接成功");
+        sendMsg(session, "------websocket连接成功------");
         if (!viewLogService.verifyPath(ip, path)) {
             sendMsg(session, "文件路径不支持");
         }
@@ -52,7 +53,7 @@ public class WebSocketServer {
             inputStream = doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
-            ViewLogThread viewLogThread = new ViewLogThread(bufferedReader, session);
+            ViewLogThread viewLogThread = new ViewLogThread(bufferedReader, session, CmdEnum.isRealTimeCmd(cmd));
             log.info("当前线程：{}-{}\n创建ViewLogThread：{}-{}\nactiveCount：{}", Thread.currentThread().getId(),
                     Thread.currentThread().getName(),
                     viewLogThread.getId(),
@@ -109,31 +110,29 @@ public class WebSocketServer {
 
     @OnClose
     public void onClose(Session session) {
-        //TODO 关闭资源
         log.info("关闭连接收到请求：{}", session);
+        session.sendText("------websocket已关闭------<br>");
         try {
             if (inputStreamReader != null) {
-                log.info("释放资源inputStreamReader.hashCode={}", inputStreamReader.hashCode());
+                log.info("websocket释放资源-1-inputStreamReader.hashCode={}", inputStreamReader.hashCode());
                 inputStreamReader.close();
             }
             if (bufferedReader != null) {
-                log.info("释放资源bufferedReader.hashCode={}", bufferedReader.hashCode());
+                log.info("websocket释放资源-2-bufferedReader.hashCode={}", bufferedReader.hashCode());
                 bufferedReader.close();
             }
             if (inputStream != null) {
-                log.info("释放资源inputStream.hashCode={}", inputStream.hashCode());
+                log.info("websocket释放资源-3-inputStream.hashCode={}", inputStream.hashCode());
                 inputStream.close();
             }
             if (process != null) {
-                log.info("释放资源process.hashCode={}", process.hashCode());
+                log.info("websocket释放资源-4-process.hashCode={}", process.hashCode());
                 process.destroy();
             }
-            if (session != null) {
-                log.info("释放资源process.hashCode={}", session.hashCode());
-                session.close();
-            }
+            log.info("websocket释放资源-5-process.hashCode={}", session.hashCode());
+            session.close();
         } catch (Exception exception) {
-            log.error("释放资源报错：", exception);
+            log.error("websocket释放资源报错：", exception);
         }
     }
 

@@ -17,10 +17,12 @@ public class ViewLogThread extends Thread {
 
     private BufferedReader bufferedReader;
     private Session session;
+    private boolean isRealTimeLog;
 
-    public ViewLogThread(BufferedReader bufferedReader, Session session) {
+    public ViewLogThread(BufferedReader bufferedReader, Session session, boolean isRealTimeLog) {
         this.bufferedReader = bufferedReader;
         this.session = session;
+        this.isRealTimeLog = isRealTimeLog;
     }
 
     @Override
@@ -28,8 +30,18 @@ public class ViewLogThread extends Thread {
         log.info("当前查看日志线程：ViewLogThread={}-{}", Thread.currentThread().getId(), Thread.currentThread().getName());
         String line;
         try {
-            while ((line = bufferedReader.readLine()) != null) {
-                session.sendText(line + "<br>");
+            while (true) {
+                line = bufferedReader.readLine();
+                if (line != null) {
+                    session.sendText(line + "<br>");
+                } else {
+                    //如果不是实时日志，关闭连接
+                    if (!isRealTimeLog) {
+                        session.sendText("------日志已读取完，websocket将要关闭------<br>");
+                        session.close();
+                        return;
+                    }
+                }
             }
         } catch (IOException e) {
             session.sendText("查看日志工具报错：" + e.toString());

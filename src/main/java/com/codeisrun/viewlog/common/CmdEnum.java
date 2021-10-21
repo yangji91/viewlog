@@ -7,20 +7,43 @@ package com.codeisrun.viewlog.common;
  */
 public enum CmdEnum {
 
-    TAIL_F(1, "tail -f ", "实时日志"),
-    TAIL_N(2, "tail -", "最新n行日志"),
-    GREP(3, "grep -C ", "搜索日志"),
-    GZIP_DC(4, "gunzip -dc ", "搜索压缩文件日志"),
-    LS(5, "ls -lht --time-style '+%Y-%m-%d %H:%M:%S' ", "列出日志文件信息");
+
+    /**
+     * 实时日志
+     * 完整命令：tail -f /home/logs/gc.log
+     */
+    TAIL_F(1, "tail -f "),
+
+    /**
+     * 最新n行日志
+     * 完整命令：tail -200 /home/logs/gc.log
+     */
+    TAIL_N(2, "tail -"),
+
+    /**
+     * 搜索日志
+     * 完整命令：grep -C 5 key /home/logs/gc.log
+     */
+    GREP(3, "grep -C "),
+
+    /**
+     * 搜索压缩文件日志
+     * 完整命令：gunzip -dc /home/logs/catalina.out.tar.gz | grep -aC 5 key
+     */
+    GZIP_DC(4, "gunzip -dc "),
+
+    /**
+     * 列出日志文件信息
+     * 完整命令：ls -lht --time-style '+%Y-%m-%d %H:%M:%S' /home/logs
+     */
+    LS(5, "ls -lht --time-style '+%Y-%m-%d %H:%M:%S' ");
 
     private Integer code;
     private String cmdHeader;
-    private String info;
 
-    CmdEnum(int code, String cmdHeader, String info) {
+    CmdEnum(int code, String cmdHeader) {
         this.code = code;
         this.cmdHeader = cmdHeader;
-        this.info = info;
     }
 
     public int getCode() {
@@ -46,6 +69,10 @@ public enum CmdEnum {
             }
         }
         return null;
+    }
+
+    public static boolean isRealTimeCmd(String cmd) {
+        return cmd != null && cmd.startsWith(TAIL_F.getCmdHeader());
     }
 
 }

@@ -51,19 +51,19 @@ public class LinuxUtil {
             throw e;
         } finally {
             if (inputStreamReader != null) {
-                log.info("释放资源inputStreamReader.hashCode={}", inputStreamReader.hashCode());
+                log.info("释放资源-1-inputStreamReader.hashCode={}", inputStreamReader.hashCode());
                 inputStreamReader.close();
             }
             if (bufferedReader != null) {
-                log.info("释放资源bufferedReader.hashCode={}", bufferedReader.hashCode());
+                log.info("释放资源-2-bufferedReader.hashCode={}", bufferedReader.hashCode());
                 bufferedReader.close();
             }
             if (inputStream != null) {
-                log.info("释放资源inputStream.hashCode={}", inputStream.hashCode());
+                log.info("释放资源-3-inputStream.hashCode={}", inputStream.hashCode());
                 inputStream.close();
             }
             if (process != null) {
-                log.info("释放资源process.hashCode={}", process.hashCode());
+                log.info("释放资源-4-process.hashCode={}", process.hashCode());
                 process.destroy();
             }
         }
