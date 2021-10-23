@@ -21,9 +21,9 @@ public class Project {
             String[] ls = logPath.split("\\|");
             if (ls.length == 3) {
                 Project info = new Project();
-                info.setGroupName(ls[0]);
-                info.setName(ls[1]);
-                info.setNodeList(ProjectNode.genList(ls[2], info.getName()));
+                info.setGroupName(ls[0].trim());
+                info.setName(ls[1].trim());
+                info.setNodeList(ProjectNode.genList(ls[2], info.getGroupName(), info.getName()));
                 return info;
             }
         }
@@ -40,10 +40,18 @@ public class Project {
     private String name;
     private List<ProjectNode> nodeList;
 
+    public String getGroupName() {
+        return groupName == null ? "" : groupName;
+    }
+
+    public String getName() {
+        return name == null ? "" : name;
+    }
+
 
     @Data
     public static class ProjectNode {
-        public static List<ProjectNode> genList(String config, String name) {
+        public static List<ProjectNode> genList(String config, String groupName, String name) {
             List<ProjectNode> list = new ArrayList<>();
             if (config != null) {
                 String[] nodes = config.split("\\^");
@@ -62,7 +70,8 @@ public class Project {
                                 }
                             }
                             info.setLogPath(items[1].trim());
-                            info.viewFileInfoUrl = String.format("/viewlog/info?ip=%s&path=%s&name=%s", info.getIp(), LogUtil.urlEncode(info.getLogPath()), name);
+                            info.viewFileInfoUrl = String.format("/viewlog/info?groupName=%s&name=%s&env=%s&ip=%s&path=%s",
+                                    groupName, name, info.getEnv(), info.getIp(), LogUtil.urlEncode(info.getLogPath()));
                             list.add(info);
                         }
                     }

@@ -5,9 +5,7 @@ import com.codeisrun.viewlog.bean.Project;
 import com.codeisrun.viewlog.bean.ProjectFileInfo;
 import com.codeisrun.viewlog.common.CmdEnum;
 import com.codeisrun.viewlog.config.SystemConfig;
-import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
-import com.sun.org.apache.xalan.internal.lib.NodeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +14,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static com.codeisrun.viewlog.util.LinuxUtil.*;
+import static com.codeisrun.viewlog.util.LinuxUtil.doCmdAndGetStr;
 
 /**
  * 执行ssh命令方式，支持读取远程服务器文件
@@ -30,26 +30,39 @@ public class SshViewLogServiceImpl implements IViewLogService {
 
     @Autowired
     private SystemConfig systemConfig;
+    private static List<Project> cacheProjectList = new ArrayList<>();
 
 
     @Override
     public List<Project> getProjectList() {
-        List<Project> logInfos = new ArrayList<>();
+        if (!cacheProjectList.isEmpty()) {
+            return cacheProjectList;
+        }
         if (systemConfig.logPaths != null) {
             String[] ps = systemConfig.logPaths.split(",");
             for (String p : ps) {
                 Project info = Project.getFromLogPath(p);
                 if (info != null) {
-                    logInfos.add(info);
+                    cacheProjectList.add(info);
                 }
             }
         }
-        return logInfos;
+        return cacheProjectList;
+    }
+
+    private List<Project.ProjectNode> getByName(String groupName, String name, String env) {
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getGroupName().equals(groupName) && p.getName().equals(name)).findFirst();
+        if (optionalProject.isPresent()) {
+            if (!optionalProject.get().getNodeList().isEmpty()) {
+                return optionalProject.get().getNodeList().stream().filter(n -> n.getEnv().equals(env)).collect(Collectors.toList());
+            }
+        }
+        return null;
     }
 
 
     @Override
-    public ProjectFileInfo getFileInfos(String ip, String path) {
+    public ProjectFileInfo getFileInfos(String groupName, String name, String env, String ip, String path) {
         ProjectFileInfo projectFileInfo = new ProjectFileInfo();
         if (!verifyPath(ip, path)) {
             projectFileInfo.setTotalSize("文件路径不支持");
@@ -77,6 +90,7 @@ public class SshViewLogServiceImpl implements IViewLogService {
             f.setFileIcon(LogUtil.getIcon(f));
             f.setLogFile(LogUtil.isLogFile(f));
         }
+        projectFileInfo.setProjectNodes(getByName(groupName, name, env));
         return projectFileInfo;
     }
 

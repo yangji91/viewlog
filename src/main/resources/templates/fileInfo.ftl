@@ -2,13 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>查看日志</title>
+    <title>${name!}>${ip!}</title>
     <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
     <script src="/jquery-3.4.1.min.js"></script>
 </head>
 <body>
 <div>
     <a href="/" style="font-size: xx-large">查看日志</a> >${name!}>${ip!}>${fs.totalSize!}
+</div>
+<div>
+    <#if fs.projectNodes??>
+        <ul class="nav nav-tabs">
+            <#list fs.projectNodes as node>
+                <li class="nav-item">
+                    <#if node.ip=ip>
+                        <a class="nav-link active" href="${node.viewFileInfoUrl}">${node.viewIp}</a>
+                    <#else>
+                        <a class="nav-link" href="${node.viewFileInfoUrl}">${node.viewIp}</a>
+                    </#if>
+                </li>
+            </#list>
+        </ul>
+    </#if>
 </div>
 <div>
     <table class="table" style="width: 1500px">

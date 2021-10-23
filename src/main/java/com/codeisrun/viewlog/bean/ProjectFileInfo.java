@@ -13,5 +13,12 @@ import java.util.List;
 @Data
 public class ProjectFileInfo {
     private String totalSize;
+    /**
+     * 文件信息
+     */
     private List<FileInfo> fileInfoList;
+    /**
+     * 实例信息
+     */
+    private List<Project.ProjectNode> projectNodes;
 }
