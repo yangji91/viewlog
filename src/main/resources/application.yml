@@ -16,7 +16,19 @@ netty-websocket:
 #    user:
 #      name: admin
 #      password: admin
-
+threadPool:
+  corePoolSize: 8
+  maximumPoolSize: 32
+  keepAliveTime: 3600
+#服务监控
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+#  endpoint:
+#    health:
+#      show-details: always
 log:
   #服务器信息：ip地址|ssh用户名|密码
   servers:

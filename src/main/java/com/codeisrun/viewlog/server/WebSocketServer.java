@@ -11,15 +11,13 @@ import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.yeauty.annotation.*;
 import org.yeauty.pojo.Session;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author liubinqiang
@@ -34,6 +32,8 @@ public class WebSocketServer {
     private SystemConfig systemConfig;
     @Autowired
     private IViewLogService viewLogService;
+    @Autowired
+    private ThreadPoolExecutor threadPoolExecutor;
 
     private Process process = null;
     private InputStream inputStream = null;
@@ -53,13 +53,8 @@ public class WebSocketServer {
             inputStream = doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
-            ViewLogThread viewLogThread = new ViewLogThread(bufferedReader, session, CmdEnum.isRealTimeCmd(cmd));
-            log.info("当前线程：{}-{}\n创建ViewLogThread：{}-{}\nactiveCount：{}", Thread.currentThread().getId(),
-                    Thread.currentThread().getName(),
-                    viewLogThread.getId(),
-                    viewLogThread.getName(),
-                    Thread.activeCount());
-            viewLogThread.start();
+            ViewLogTask viewLogTask = new ViewLogTask(bufferedReader, session, CmdEnum.isRealTimeCmd(cmd));
+            threadPoolExecutor.execute(viewLogTask);
         } catch (Exception e) {
             log.error("查看日志报错：", e);
             sendMsg(session, e.getMessage());

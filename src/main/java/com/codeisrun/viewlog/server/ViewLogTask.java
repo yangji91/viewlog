@@ -13,13 +13,13 @@ import java.io.InputStreamReader;
  * @author liubinqiang
  */
 @Slf4j
-public class ViewLogThread extends Thread {
+public class ViewLogTask implements Runnable {
 
     private BufferedReader bufferedReader;
     private Session session;
     private boolean isRealTimeLog;
 
-    public ViewLogThread(BufferedReader bufferedReader, Session session, boolean isRealTimeLog) {
+    public ViewLogTask(BufferedReader bufferedReader, Session session, boolean isRealTimeLog) {
         this.bufferedReader = bufferedReader;
         this.session = session;
         this.isRealTimeLog = isRealTimeLog;
