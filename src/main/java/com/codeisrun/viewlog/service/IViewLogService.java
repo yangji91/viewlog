@@ -17,7 +17,11 @@ public interface IViewLogService {
      */
     List<Project> getProjectList();
 
-    ProjectFileInfo getFileInfos(String groupName, String name, String env, String ip, String path);
+    ProjectFileInfo getFileInfos(int projectId, int nodeId, String ip, String path);
+
+    Project.ProjectNode getNode(int projectId, int nodeId);
+
+    Project getProject(int projectId);
 
     boolean verifyPath(String ip, String path);
 }

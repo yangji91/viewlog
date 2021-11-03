@@ -40,21 +40,26 @@ public class SshViewLogServiceImpl implements IViewLogService {
         }
         if (systemConfig.logPaths != null) {
             String[] ps = systemConfig.logPaths.split(",");
+            int currentProjectId = 1;
             for (String p : ps) {
-                Project info = Project.getFromLogPath(p);
+                Project info = Project.getFromLogPath(p, currentProjectId);
                 if (info != null) {
                     cacheProjectList.add(info);
+                    currentProjectId = currentProjectId + 1;
                 }
             }
         }
         return cacheProjectList;
     }
 
-    private List<Project.ProjectNode> getByName(String groupName, String name, String env) {
-        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getGroupName().equals(groupName) && p.getName().equals(name)).findFirst();
+    private List<Project.ProjectNode> getById(int projectId, int nodeId) {
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectId() == projectId).findFirst();
         if (optionalProject.isPresent()) {
             if (!optionalProject.get().getNodeList().isEmpty()) {
-                return optionalProject.get().getNodeList().stream().filter(n -> n.getEnv().equals(env)).collect(Collectors.toList());
+                Optional<Project.ProjectNode> nodeOptional = optionalProject.get().getNodeList().stream().filter(n -> n.getNodeId() == nodeId).findFirst();
+                if (nodeOptional.isPresent()) {
+                    return optionalProject.get().getNodeList().stream().filter(n -> n.getEnv().equals(nodeOptional.get().getEnv())).collect(Collectors.toList());
+                }
             }
         }
         return null;
@@ -62,7 +67,7 @@ public class SshViewLogServiceImpl implements IViewLogService {
 
 
     @Override
-    public ProjectFileInfo getFileInfos(String groupName, String name, String env, String ip, String path) {
+    public ProjectFileInfo getFileInfos(int projectId, int nodeId, String ip, String path) {
         ProjectFileInfo projectFileInfo = new ProjectFileInfo();
         if (!verifyPath(ip, path)) {
             projectFileInfo.setTotalSize("文件路径不支持");
@@ -90,8 +95,31 @@ public class SshViewLogServiceImpl implements IViewLogService {
             f.setFileIcon(LogUtil.getIcon(f));
             f.setLogFile(LogUtil.isLogFile(f));
         }
-        projectFileInfo.setProjectNodes(getByName(groupName, name, env));
+        projectFileInfo.setProjectNodes(getById(projectId, nodeId));
         return projectFileInfo;
+    }
+
+    @Override
+    public Project.ProjectNode getNode(int projectId, int nodeId) {
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectId() == projectId).findFirst();
+        if (optionalProject.isPresent()) {
+            if (!optionalProject.get().getNodeList().isEmpty()) {
+                Optional<Project.ProjectNode> nodeOptional = optionalProject.get().getNodeList().stream().filter(n -> n.getNodeId() == nodeId).findFirst();
+                if (nodeOptional.isPresent()) {
+                    return nodeOptional.get();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Project getProject(int projectId) {
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectId() == projectId).findFirst();
+        if (optionalProject.isPresent()) {
+            return optionalProject.get();
+        }
+        return null;
     }
 
     @Override

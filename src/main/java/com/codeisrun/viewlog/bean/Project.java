@@ -16,20 +16,25 @@ public class Project {
     public Project() {
     }
 
-    public static Project getFromLogPath(String logPath) {
+    public static Project getFromLogPath(String logPath, int projectId) {
         if (logPath != null && logPath.length() > 0) {
             String[] ls = logPath.split("\\|");
             if (ls.length == 3) {
-                Project info = new Project();
-                info.setGroupName(ls[0].trim());
-                info.setName(ls[1].trim());
-                info.setNodeList(ProjectNode.genList(ls[2], info.getGroupName(), info.getName()));
-                return info;
+                Project project = new Project();
+                project.setProjectId(projectId);
+                project.setGroupName(ls[0].trim());
+                project.setName(ls[1].trim());
+                project.setNodeList(ProjectNode.genList(ls[2], projectId));
+                return project;
             }
         }
         return null;
     }
 
+    /**
+     * 项目id
+     */
+    private int projectId;
     /**
      * 分组名称
      */
@@ -49,17 +54,22 @@ public class Project {
     }
 
 
+    /**
+     * 项目实例
+     */
     @Data
     public static class ProjectNode {
-        public static List<ProjectNode> genList(String config, String groupName, String name) {
+        public static List<ProjectNode> genList(String config, int projectId) {
             List<ProjectNode> list = new ArrayList<>();
             if (config != null) {
                 String[] nodes = config.split("\\^");
+                int currentNodeId = 1;
                 for (String node : nodes) {
                     if (node != null) {
                         String[] items = node.split("@");
                         if (items.length == 2) {
                             ProjectNode info = new ProjectNode();
+                            info.setNodeId(currentNodeId);
                             if (items[0] != null) {
                                 String[] envIp = items[0].split("-");
                                 if (envIp.length > 0) {
@@ -70,9 +80,10 @@ public class Project {
                                 }
                             }
                             info.setLogPath(items[1].trim());
-                            info.viewFileInfoUrl = String.format("/viewlog/info?groupName=%s&name=%s&env=%s&ip=%s&path=%s",
-                                    groupName, name, info.getEnv(), info.getIp(), LogUtil.urlEncode(info.getLogPath()));
+                            info.viewFileInfoUrl = String.format("/viewlog/info?projectId=%s&nodeId=%s&ip=%s&path=%s",
+                                    projectId, currentNodeId, info.getIp(), LogUtil.urlEncode(info.getLogPath()));
                             list.add(info);
+                            currentNodeId = currentNodeId + 1;
                         }
                     }
                 }
@@ -80,6 +91,10 @@ public class Project {
             return list;
         }
 
+        /**
+         * 节点id
+         */
+        private int nodeId;
         /**
          * 哪个环境
          */

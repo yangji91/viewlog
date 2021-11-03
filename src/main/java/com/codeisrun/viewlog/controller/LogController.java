@@ -63,10 +63,11 @@ public class LogController {
      * @return
      */
     @RequestMapping("/info")
-    public String logInfo(HttpServletRequest request, ModelMap modelMap, String groupName, String name, String env, String ip, String path) {
-        ProjectFileInfo fs = viewLogService.getFileInfos(groupName, name, env, ip, path);
+    public String logInfo(HttpServletRequest request, ModelMap modelMap, int projectId, int nodeId, String ip, String path) {
+        ProjectFileInfo fs = viewLogService.getFileInfos(projectId, nodeId, ip, path);
         modelMap.put("fs", fs);
-        modelMap.put("name", name);
+        Project project = viewLogService.getProject(projectId);
+        modelMap.put("name", project == null ? "" : project.getName());
         modelMap.put("ip", ip);
         return "fileInfo";
     }
