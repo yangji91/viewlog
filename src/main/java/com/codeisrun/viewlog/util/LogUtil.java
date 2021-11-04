@@ -169,6 +169,17 @@ public class LogUtil {
         }
     }
 
+    public static boolean isCompressFile(FileInfo fileInfo) {
+        if (fileInfo.isDirectory()) {
+            return false;
+        } else {
+            if (isCompressFile(fileInfo.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static String getIcon(File file) {
         if (file.exists()) {

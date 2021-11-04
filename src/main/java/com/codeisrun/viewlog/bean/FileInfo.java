@@ -20,6 +20,7 @@ public class FileInfo {
     private String size;
     private boolean isDirectory;
     private boolean isLogFile;
+    private boolean isCompressFile;
     private String dirUrl;
     private String openUrl;
     private String downloadUrl;
@@ -27,14 +28,19 @@ public class FileInfo {
      * 实时日志地址
      */
     private String realTimeLogUrl;
-
     /**
-     * 最近多少条日志
+     * 日志头n行日志
      */
-    private String latestNumLogUrl;
+    private String headNumLogUrl;
+    /**
+     * 日志尾n行日志
+     */
+    private String tailNumLogUrl;
     private String fileIcon;
     private String searchLogUrl;
     private String searchGzipLogUrl;
+    private String headGzipLogUrl;
+    private String tailGzipLogUrl;
 
 
     public static ProjectFileInfo getListByStr(ProjectFileInfo projectFileInfo, String str) {

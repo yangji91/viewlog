@@ -29,12 +29,22 @@ public class DoReq {
                 case TAIL_N:
                     result = TAIL_N.getCmdHeader() + this.length + " " + this.path;
                     break;
+                case HEAD_N:
+                    result = HEAD_N.getCmdHeader() + this.length + " " + this.path;
+                    break;
                 case GREP:
                     result = GREP.getCmdHeader() + this.length + " " + this.key + " " + this.path;
                     break;
                 case GZIP_DC:
                     result = GZIP_DC.getCmdHeader() + this.path + " | grep -aC " + this.length + " " + this.key;
                     break;
+                case GZIP_DC_HEAD:
+                    result = GZIP_DC.getCmdHeader() + this.path + " | head -" + this.length;
+                    break;
+                case GZIP_DC_TAIL:
+                    result = GZIP_DC.getCmdHeader() + this.path + " | tail -" + this.length;
+                    break;
+                default:
             }
         }
         return result;

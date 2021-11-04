@@ -15,7 +15,7 @@ public enum CmdEnum {
     TAIL_F(1, "tail -f "),
 
     /**
-     * 最新n行日志
+     * 查看日志尾n行日志
      * 完整命令：tail -200 /home/logs/gc.log
      */
     TAIL_N(2, "tail -"),
@@ -36,7 +36,25 @@ public enum CmdEnum {
      * 列出日志文件信息
      * 完整命令：ls -lht --time-style '+%Y-%m-%d %H:%M:%S' /home/logs
      */
-    LS(5, "ls -lht --time-style '+%Y-%m-%d %H:%M:%S' ");
+    LS(5, "ls -lht --time-style '+%Y-%m-%d %H:%M:%S' "),
+
+    /**
+     * 查看日志头n行日志
+     * 完整命令：tail -200 /home/logs/gc.log
+     */
+    HEAD_N(6, "head -"),
+
+    /**
+     * 压缩文件日志-查看头
+     * 完整命令：gunzip -dc /home/logs/catalina.out.tar.gz | head -10
+     */
+    GZIP_DC_HEAD(7, "gunzip -dc "),
+
+    /**
+     * 压缩文件日志-查看尾
+     * 完整命令：gunzip -dc /home/logs/catalina.out.tar.gz | tail -10
+     */
+    GZIP_DC_TAIL(8, "gunzip -dc ");
 
     private Integer code;
     private String cmdHeader;

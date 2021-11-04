@@ -89,11 +89,15 @@ public class SshViewLogServiceImpl implements IViewLogService {
             f.setDownloadUrl(("/viewlog/download?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath)));
             f.setOpenUrl("/viewlog/open?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath));
             f.setRealTimeLogUrl("/viewlog/do?ip=" + ip + "&code=1&path=" + LogUtil.urlEncode(subPath));
-            f.setLatestNumLogUrl("/viewlog/do?ip=" + ip + "&code=2&path=" + LogUtil.urlEncode(subPath));
+            f.setTailNumLogUrl("/viewlog/do?ip=" + ip + "&code=2&path=" + LogUtil.urlEncode(subPath));
+            f.setHeadNumLogUrl("/viewlog/do?ip=" + ip + "&code=6&path=" + LogUtil.urlEncode(subPath));
             f.setSearchLogUrl("/viewlog/do?ip=" + ip + "&code=3&path=" + LogUtil.urlEncode(subPath));
             f.setSearchGzipLogUrl("/viewlog/do?ip=" + ip + "&code=4&path=" + LogUtil.urlEncode(subPath));
+            f.setHeadGzipLogUrl("/viewlog/do?ip=" + ip + "&code=7&path=" + LogUtil.urlEncode(subPath));
+            f.setTailGzipLogUrl("/viewlog/do?ip=" + ip + "&code=8&path=" + LogUtil.urlEncode(subPath));
             f.setFileIcon(LogUtil.getIcon(f));
             f.setLogFile(LogUtil.isLogFile(f));
+            f.setCompressFile(LogUtil.isCompressFile(f));
         }
         projectFileInfo.setProjectNodes(getById(projectId, nodeId));
         return projectFileInfo;
