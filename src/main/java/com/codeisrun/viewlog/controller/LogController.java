@@ -1,6 +1,7 @@
 package com.codeisrun.viewlog.controller;
 
 import com.codeisrun.viewlog.bean.DoReq;
+import com.codeisrun.viewlog.bean.GcResult;
 import com.codeisrun.viewlog.bean.ProjectFileInfo;
 import com.codeisrun.viewlog.config.SystemConfig;
 import com.codeisrun.viewlog.service.IViewLogService;
@@ -70,6 +71,16 @@ public class LogController {
         modelMap.put("name", project == null ? "" : project.getName());
         modelMap.put("ip", ip);
         return "fileInfo";
+    }
+
+    @RequestMapping("/gcInfo")
+    public String gcInfo(HttpServletRequest request, ModelMap modelMap, int projectId, String ip, String path) {
+        GcResult gcResult = viewLogService.analyseGcLog(ip, path);
+        modelMap.put("gc", gcResult);
+        Project project = viewLogService.getProject(projectId);
+        modelMap.put("name", project == null ? "" : project.getName());
+        modelMap.put("ip", ip);
+        return "gcInfo";
     }
 
     /**

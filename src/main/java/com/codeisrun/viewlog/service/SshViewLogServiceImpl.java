@@ -1,10 +1,9 @@
 package com.codeisrun.viewlog.service;
 
-import com.codeisrun.viewlog.bean.FileInfo;
-import com.codeisrun.viewlog.bean.Project;
-import com.codeisrun.viewlog.bean.ProjectFileInfo;
+import com.codeisrun.viewlog.bean.*;
 import com.codeisrun.viewlog.common.CmdEnum;
 import com.codeisrun.viewlog.config.SystemConfig;
+import com.codeisrun.viewlog.util.LinuxUtil;
 import com.codeisrun.viewlog.util.LogUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.codeisrun.viewlog.util.LinuxUtil.doCmdAndGetStr;
 
 /**
  * 执行ssh命令方式，支持读取远程服务器文件
@@ -75,7 +73,7 @@ public class SshViewLogServiceImpl implements IViewLogService {
         }
         String ret = null;
         try {
-            ret = doCmdAndGetStr(ip,
+            ret = LinuxUtil.doCmdAndGetStr(ip,
                     systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.LS.getCmdHeader() + path, path);
         } catch (Exception e) {
             log.error("查询项目信息报错：", e);
@@ -84,6 +82,9 @@ public class SshViewLogServiceImpl implements IViewLogService {
         }
         projectFileInfo = FileInfo.getListByStr(projectFileInfo, ret);
         for (FileInfo f : projectFileInfo.getFileInfoList()) {
+            f.setProjectId(projectId);
+            f.setNodeId(nodeId);
+            f.setIp(ip);
             String subPath = path + File.separator + f.getName();
             f.setPath(subPath);
             f.setDownloadUrl(("/viewlog/download?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath)));
@@ -139,6 +140,27 @@ public class SshViewLogServiceImpl implements IViewLogService {
             }
         }
         return false;
+    }
+
+    @Override
+    public GcResult analyseGcLog(String ip, String path) {
+        GcResult gcResult = new GcResult();
+        String retStr = null;
+        try {
+            retStr = LinuxUtil.doCmdAndGetStr(ip,
+                    systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.GREP.getCmdHeader() + "ParNew: " + path, path);
+            if (retStr != null) {
+                List<GcRecord> recordList = new ArrayList<>();
+                String[] strArray = retStr.split("\n");
+                for (String s : strArray) {
+                    recordList.add(new GcRecord(s));
+                }
+                gcResult.setGcRecordList(recordList);
+            }
+        } catch (Exception e) {
+            log.error("查询日志信息报错：", e);
+        }
+        return gcResult;
     }
 
 }

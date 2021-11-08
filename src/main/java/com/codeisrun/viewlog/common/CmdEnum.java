@@ -24,7 +24,7 @@ public enum CmdEnum {
      * 搜索日志
      * 完整命令：grep -C 5 key /home/logs/gc.log
      */
-    GREP(3, "grep -C "),
+    GREP_C(3, "grep -C "),
 
     /**
      * 搜索压缩文件日志
@@ -54,7 +54,13 @@ public enum CmdEnum {
      * 压缩文件日志-查看尾
      * 完整命令：gunzip -dc /home/logs/catalina.out.tar.gz | tail -10
      */
-    GZIP_DC_TAIL(8, "gunzip -dc ");
+    GZIP_DC_TAIL(8, "gunzip -dc "),
+
+    /**
+     * 搜索日志，只返回相关行
+     * 完整命令：grep  'ParNew:' gc.log
+     */
+    GREP(9, "grep ");
 
     private Integer code;
     private String cmdHeader;

@@ -36,7 +36,7 @@
             <td>搜索日志</td>
             <td>查看日志头</td>
             <td>查看日志尾</td>
-            <#--            <td>下载</td>-->
+            <td>操作</td>
         </tr>
         <#list fs.fileInfoList! as f>
             <tr>
@@ -86,11 +86,11 @@
                         <input type="text" value="200" size="1">
                     </#if>
                 </td>
-                <#--                <td>-->
-                <#--                    <#if !f.directory>-->
-                <#--                        <a target="_blank" href="${f.downloadUrl!}">下载</a>-->
-                <#--                    </#if>-->
-                <#--                </td>-->
+                <td>
+                    <#if f.name="gc.log">
+                        <a target="_blank" href="/viewlog/gcInfo?projectId=${f.projectId}&ip=${f.ip}&path=${f.path}">gc日志分析</a>
+                    </#if>
+                </td>
             </tr>
         </#list>
         </thead>

@@ -14,6 +14,9 @@ import java.util.List;
 @Data
 @Builder
 public class FileInfo {
+    private int projectId;
+    private int nodeId;
+    private String ip;
     private String path;
     private String name;
     private String modifyTime;

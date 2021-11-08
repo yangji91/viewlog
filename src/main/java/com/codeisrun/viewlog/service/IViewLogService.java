@@ -1,6 +1,7 @@
 package com.codeisrun.viewlog.service;
 
 import com.codeisrun.viewlog.bean.FileInfo;
+import com.codeisrun.viewlog.bean.GcResult;
 import com.codeisrun.viewlog.bean.Project;
 import com.codeisrun.viewlog.bean.ProjectFileInfo;
 
@@ -24,4 +25,6 @@ public interface IViewLogService {
     Project getProject(int projectId);
 
     boolean verifyPath(String ip, String path);
+
+    GcResult analyseGcLog(String ip, String path);
 }
