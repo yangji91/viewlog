@@ -44,7 +44,7 @@ public class LinuxUtil {
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
             String result = bufferedReader.lines().collect(Collectors.joining("\n"));
-            log.info("\n执行命令：{}\n响应：{}", cmd, result);
+            log.info("\n执行命令：{}\n响应字符长度：{}", cmd, result.length());
             return result;
         } catch (Exception e) {
             log.error("执行命令报错：", e);

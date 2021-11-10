@@ -58,7 +58,7 @@ public enum CmdEnum {
 
     /**
      * 搜索日志，只返回相关行
-     * 完整命令：grep  'ParNew:' gc.log
+     * 完整命令：grep ParNew gc.log |tail -n 10
      */
     GREP(9, "grep ");
 

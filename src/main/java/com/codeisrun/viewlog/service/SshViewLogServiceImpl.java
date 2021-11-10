@@ -147,31 +147,48 @@ public class SshViewLogServiceImpl implements IViewLogService {
     @Override
     public GcResult analyseGcLog(String ip, String path) {
         GcResult gcResult = new GcResult();
+        List<GcRecord> recordList = new ArrayList<>();
+        gcResult.setGcRecordList(recordList);
+        getGcResult(ip, path, gcResult, "ParNew: ", GcLogType.ParNew);
+        getGcResult(ip, path, gcResult, "CMS Initial Mark", GcLogType.CMS1);
+        getGcResult(ip, path, gcResult, "CMS Final Remark", GcLogType.CMS2);
+        int i = 1;
+        gcResult.getGcRecordList().stream().sorted();
+        for (GcRecord gcRecord : gcResult.getGcRecordList()) {
+            gcRecord.setId(i);
+            i++;
+        }
+        return gcResult;
+    }
+
+    private void getGcResult(String ip, String path, GcResult gcResult, String key, String gcLogType) {
         String retStr = null;
         try {
             retStr = LinuxUtil.doCmdAndGetStr(ip,
-                    systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.GREP.getCmdHeader() + "ParNew: " + path, path);
-            if (retStr != null) {
-                List<GcRecord> recordList = new ArrayList<>();
-                String[] strArray = retStr.split("\n");
-                Pattern pattern = Pattern.compile(GcRecord.getParNewReg());
-                int i = 1;
-                for (String s : strArray) {
-                    Matcher matcher = pattern.matcher(s);
-                    if (matcher.find()) {
-                        GcRecord gcRecord = new GcRecord(matcher);
-                        gcRecord.setId(i);
-                        i++;
-                        recordList.add(gcRecord);
+                    systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.GREP.getCmdHeader() + "'" + key + "'" + path + " |tail -n 1000", path);
+            List<GcRecord> recordList = new ArrayList<>();
+            String[] strArray = retStr.split("\n");
+            Pattern pattern = Pattern.compile(GcRecord.getGcReg(gcLogType));
+            for (int i = 0; i < strArray.length; i++) {
+                Matcher matcher = pattern.matcher(strArray[i]);
+                if (matcher.find()) {
+                    GcRecord gcRecord = GcRecord.genRecord(matcher, gcLogType);
+                    recordList.add(gcRecord);
+                    if (i == 0) {
+                        gcResult.setBeginTime(gcRecord.getDateTime());
+                        gcResult.setBeginRunTime(gcRecord.getRunTime());
+                    }
+                    if (i == strArray.length - 1) {
+                        gcResult.setEndTime(gcRecord.getDateTime());
+                        gcResult.setEndRunTime(gcRecord.getRunTime());
                     }
                 }
-                log.info("解析gc日志：strArray.length={},recordList.size={}", strArray.length, recordList.size());
-                gcResult.setGcRecordList(recordList);
             }
+            log.info("解析gc日志：strArray.length={},recordList.size={}", strArray.length, recordList.size());
+            gcResult.getGcRecordList().addAll(recordList);
         } catch (Exception e) {
             log.error("查询日志信息报错：", e);
         }
-        return gcResult;
     }
 
 }
