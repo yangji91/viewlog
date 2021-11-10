@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -152,9 +154,18 @@ public class SshViewLogServiceImpl implements IViewLogService {
             if (retStr != null) {
                 List<GcRecord> recordList = new ArrayList<>();
                 String[] strArray = retStr.split("\n");
+                Pattern pattern = Pattern.compile(GcRecord.getParNewReg());
+                int i = 1;
                 for (String s : strArray) {
-                    recordList.add(new GcRecord(s));
+                    Matcher matcher = pattern.matcher(s);
+                    if (matcher.find()) {
+                        GcRecord gcRecord = new GcRecord(matcher);
+                        gcRecord.setId(i);
+                        i++;
+                        recordList.add(gcRecord);
+                    }
                 }
+                log.info("解析gc日志：strArray.length={},recordList.size={}", strArray.length, recordList.size());
                 gcResult.setGcRecordList(recordList);
             }
         } catch (Exception e) {

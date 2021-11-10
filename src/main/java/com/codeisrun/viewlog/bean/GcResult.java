@@ -17,7 +17,7 @@ public class GcResult {
     public BigDecimal getTotalRealTime() {
         if (gcRecordList != null && !gcRecordList.isEmpty()) {
             for (GcRecord gcRecord : gcRecordList) {
-                totalRealTime = totalRealTime.add(gcRecord.getRealTime());
+                totalRealTime = totalRealTime.add(new BigDecimal(gcRecord.getUsedTime1()));
             }
         }
         return totalRealTime;
