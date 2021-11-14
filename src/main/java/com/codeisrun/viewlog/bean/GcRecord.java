@@ -1,5 +1,6 @@
 package com.codeisrun.viewlog.bean;
 
+import com.codeisrun.viewlog.util.DataUtil;
 import lombok.Data;
 
 import java.util.regex.Matcher;
@@ -36,7 +37,7 @@ public class GcRecord {
         GcRecord gcRecord = new GcRecord();
         gcRecord.setGcType(GcLogType.ParNew);
         gcRecord.setDateTime(matcher.group(1));
-        gcRecord.setRunTime(matcher.group(2));
+        gcRecord.setRunTime(Float.parseFloat(matcher.group(2)));
         gcRecord.setGcReason(matcher.group(3));
         gcRecord.setYoungUsedSize(matcher.group(4));
         gcRecord.setYoungAfterGcUsed(matcher.group(5));
@@ -53,12 +54,12 @@ public class GcRecord {
         GcRecord gcRecord = new GcRecord();
         gcRecord.setGcType(GcLogType.CMS1);
         gcRecord.setDateTime(matcher.group(1));
-        gcRecord.setRunTime(matcher.group(2));
+/*        gcRecord.setRunTime(matcher.group(2));
         gcRecord.setGcReason(matcher.group(3));
         gcRecord.setYoungUsedSize(matcher.group(4));
         gcRecord.setYoungAfterGcUsed(matcher.group(5));
         gcRecord.setYoungTotalSize(matcher.group(6));
-        gcRecord.setUsedTime1(matcher.group(7));
+        gcRecord.setUsedTime1(matcher.group(7));*/
         return gcRecord;
     }
 
@@ -66,15 +67,16 @@ public class GcRecord {
         GcRecord gcRecord = new GcRecord();
         gcRecord.setGcType(GcLogType.CMS2);
         gcRecord.setDateTime(matcher.group(1));
-        gcRecord.setRunTime(matcher.group(2));
+//        gcRecord.setRunTime(matcher.group(2));
         return gcRecord;
     }
 
     private Integer id;
     private String gcType;
 
+
     private String dateTime;
-    private String runTime;
+    private float runTime;
     private String gcReason;
     private String youngUsedSize;
     private String youngAfterGcUsed;
@@ -85,6 +87,56 @@ public class GcRecord {
     private String heapTotalSize;
     private String usedTime2;
 
+    private float intervalTime;
+
+
+    public String getYoungUsedSize() {
+        return DataUtil.kbToMb(youngUsedSize);
+    }
+
+    public String getYoungUsedSizeRate() {
+        return DataUtil.rate(youngUsedSize, youngTotalSize);
+    }
+
+    public String getYoungAfterGcUsed() {
+        return DataUtil.kbToMb(youngAfterGcUsed);
+    }
+
+    public String getYoungAfterGcUsedRate() {
+        return DataUtil.rate(youngAfterGcUsed, youngTotalSize);
+    }
+
+    public String getYoungAfterGcUsedUpRate() {
+        return DataUtil.upRate(youngUsedSize, youngAfterGcUsed, youngTotalSize);
+    }
+
+    public String getYoungTotalSize() {
+        return DataUtil.kbToMb(youngTotalSize);
+    }
+
+    public String getHeapUsedSize() {
+        return DataUtil.kbToMb(heapUsedSize);
+    }
+
+    public String getHeapUsedSizeRate() {
+        return DataUtil.rate(heapUsedSize, youngAfterGcUsed);
+    }
+
+    public String getHeapAfterGcUsed() {
+        return DataUtil.kbToMb(heapAfterGcUsed);
+    }
+
+    public String getHeapTotalSize() {
+        return DataUtil.kbToMb(heapTotalSize);
+    }
+
+
+    public void setDateTime(String dateTime) {
+        if (dateTime != null) {
+            dateTime = dateTime.replace("T", " ");
+        }
+        this.dateTime = dateTime;
+    }
 
     public static String getGcReg(String gcLogType) {
         String reg = null;

@@ -152,12 +152,6 @@ public class SshViewLogServiceImpl implements IViewLogService {
         getGcResult(ip, path, gcResult, "ParNew: ", GcLogType.ParNew);
         getGcResult(ip, path, gcResult, "CMS Initial Mark", GcLogType.CMS1);
         getGcResult(ip, path, gcResult, "CMS Final Remark", GcLogType.CMS2);
-        int i = 1;
-        gcResult.getGcRecordList().stream().sorted();
-        for (GcRecord gcRecord : gcResult.getGcRecordList()) {
-            gcRecord.setId(i);
-            i++;
-        }
         return gcResult;
     }
 
@@ -165,14 +159,18 @@ public class SshViewLogServiceImpl implements IViewLogService {
         String retStr = null;
         try {
             retStr = LinuxUtil.doCmdAndGetStr(ip,
-                    systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.GREP.getCmdHeader() + "'" + key + "'" + path + " |tail -n 1000", path);
+                    systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), CmdEnum.GREP.getCmdHeader() + " '" + key + "' " + path + " |tail -n 1000", path);
             List<GcRecord> recordList = new ArrayList<>();
             String[] strArray = retStr.split("\n");
             Pattern pattern = Pattern.compile(GcRecord.getGcReg(gcLogType));
+            float lastGcTime = 0;
             for (int i = 0; i < strArray.length; i++) {
                 Matcher matcher = pattern.matcher(strArray[i]);
                 if (matcher.find()) {
                     GcRecord gcRecord = GcRecord.genRecord(matcher, gcLogType);
+                    gcRecord.setId(i + 1);
+                    gcRecord.setIntervalTime(gcRecord.getRunTime() - lastGcTime);
+                    lastGcTime = gcRecord.getRunTime();
                     recordList.add(gcRecord);
                     if (i == 0) {
                         gcResult.setBeginTime(gcRecord.getDateTime());

@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class LinuxUtil {
 
     public static String doCmdAndGetStr(String serverIp, String user, String pwd, String cmd, String path) throws Exception {
+        log.info("执行命令请求：serverIp={},cmd={}", serverIp, cmd);
         if (!verifyCmd(cmd)) {
             log.error("不支持该命令：ip={},cmd={}", serverIp, cmd);
             throw new Exception("不支持该命令");
@@ -44,7 +45,7 @@ public class LinuxUtil {
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
             String result = bufferedReader.lines().collect(Collectors.joining("\n"));
-            log.info("\n执行命令：{}\n响应字符长度：{}", cmd, result.length());
+            log.info("响应字符长度：{}", result.length());
             return result;
         } catch (Exception e) {
             log.error("执行命令报错：", e);

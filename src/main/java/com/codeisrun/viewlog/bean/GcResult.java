@@ -13,8 +13,8 @@ import java.util.List;
 public class GcResult {
     private String beginTime;
     private String endTime;
-    private String beginRunTime;
-    private String endRunTime;
+    private float beginRunTime;
+    private float endRunTime;
     private String runTime;
     private BigDecimal totalRealTime = new BigDecimal(0);
     private List<GcRecord> gcRecordList;
@@ -22,7 +22,9 @@ public class GcResult {
     public BigDecimal getTotalRealTime() {
         if (gcRecordList != null && !gcRecordList.isEmpty()) {
             for (GcRecord gcRecord : gcRecordList) {
-                totalRealTime = totalRealTime.add(new BigDecimal(gcRecord.getUsedTime1()));
+                if (gcRecord.getUsedTime1() != null) {
+                    totalRealTime = totalRealTime.add(new BigDecimal(gcRecord.getUsedTime1()));
+                }
             }
         }
         return totalRealTime;
