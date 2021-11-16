@@ -73,8 +73,17 @@ public class LogController {
         return "fileInfo";
     }
 
+    /**
+     * gc日志分析
+     *
+     * @param modelMap
+     * @param projectId
+     * @param ip
+     * @param path
+     * @return
+     */
     @RequestMapping("/gcInfo")
-    public String gcInfo(HttpServletRequest request, ModelMap modelMap, int projectId, String ip, String path) {
+    public String gcInfo(ModelMap modelMap, int projectId, String ip, String path) {
         GcResult gcResult = viewLogService.analyseGcLog(ip, path);
         modelMap.put("gc", gcResult);
         Project project = viewLogService.getProject(projectId);

@@ -11,12 +11,32 @@
     <a href="/" style="font-size: xx-large">查看日志</a> >${name!}>${ip!}
 </div>
 <div>
-    停顿总时间：${gc.totalRealTime}
-    <table class="table">
+    停顿总时间：${gc.totalStopWorldTime}
+    <table class="table" style="width:1000px">
         <tbody>
         <tr>
             <td>统计时间范围：</td>
-            <td>${gc.beginTime}--${gc.endTime}</td>
+            <td>${gc.beginRunTime}--${gc.endRunTime}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>年轻代回收次数：</td>
+            <td>${gc.youngGcCount}</td>
+            <td>年轻代多久回收一次：</td>
+            <td>${gc.youngGcFrequency}</td>
+            <td>年轻代停顿总时间：</td>
+            <td>${gc.youngGcStopWorldTime}</td>
+        </tr>
+        <tr>
+            <td>老年代回收次数：</td>
+            <td>${gc.oldGcCount}</td>
+            <td>老年代多久回收一次：</td>
+            <td>${gc.oldGcFrequency}</td>
+            <td>老年代停顿总时间：</td>
+            <td>${gc.oldGcStopWorldTime}</td>
         </tr>
         </tbody>
     </table>

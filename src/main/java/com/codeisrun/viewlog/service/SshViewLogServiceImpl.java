@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -150,12 +147,13 @@ public class SshViewLogServiceImpl implements IViewLogService {
         List<GcRecord> recordList = new ArrayList<>();
         gcResult.setGcRecordList(recordList);
         getGcResult(ip, path, gcResult, "ParNew: ", GcLogType.ParNew);
-        getGcResult(ip, path, gcResult, "CMS Initial Mark", GcLogType.CMS1);
-        getGcResult(ip, path, gcResult, "CMS Final Remark", GcLogType.CMS2);
+        getGcResult(ip, path, gcResult, "CMS Initial Mark", GcLogType.CMSInitialMark);
+        getGcResult(ip, path, gcResult, "CMS Final Remark", GcLogType.CMSFinalRemark);
+        gcResult.setGcRecordList(gcResult.getGcRecordList().stream().sorted(Comparator.comparing(GcRecord::getRunTime)).collect(Collectors.toList()));
         return gcResult;
     }
 
-    private void getGcResult(String ip, String path, GcResult gcResult, String key, String gcLogType) {
+    private void getGcResult(String ip, String path, GcResult gcResult, String key, GcLogType gcLogType) {
         String retStr = null;
         try {
             retStr = LinuxUtil.doCmdAndGetStr(ip,
@@ -172,14 +170,6 @@ public class SshViewLogServiceImpl implements IViewLogService {
                     gcRecord.setIntervalTime(gcRecord.getRunTime() - lastGcTime);
                     lastGcTime = gcRecord.getRunTime();
                     recordList.add(gcRecord);
-                    if (i == 0) {
-                        gcResult.setBeginTime(gcRecord.getDateTime());
-                        gcResult.setBeginRunTime(gcRecord.getRunTime());
-                    }
-                    if (i == strArray.length - 1) {
-                        gcResult.setEndTime(gcRecord.getDateTime());
-                        gcResult.setEndRunTime(gcRecord.getRunTime());
-                    }
                 }
             }
             log.info("解析gc日志：strArray.length={},recordList.size={}", strArray.length, recordList.size());

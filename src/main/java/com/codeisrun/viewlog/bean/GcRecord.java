@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.regex.Matcher;
 
+import static com.codeisrun.viewlog.bean.GcLogType.*;
+
 /**
  * 垃圾回收记录
  *
@@ -16,17 +18,17 @@ public class GcRecord {
     public GcRecord() {
     }
 
-    public static GcRecord genRecord(Matcher matcher, String gcLogType) {
+    public static GcRecord genRecord(Matcher matcher, GcLogType gcLogType) {
         GcRecord gcRecord = null;
         switch (gcLogType) {
-            case GcLogType.ParNew:
+            case ParNew:
                 gcRecord = genParNewRecord(matcher);
                 break;
-            case GcLogType.CMS1:
-                gcRecord = genCms1Record(matcher);
+            case CMSInitialMark:
+                gcRecord = genCMSInitialMarkRecord(matcher);
                 break;
-            case GcLogType.CMS2:
-                gcRecord = genCms2Record(matcher);
+            case CMSFinalRemark:
+                gcRecord = genCMSFinalRemarkRecord(matcher);
                 break;
             default:
         }
@@ -35,7 +37,7 @@ public class GcRecord {
 
     public static GcRecord genParNewRecord(Matcher matcher) {
         GcRecord gcRecord = new GcRecord();
-        gcRecord.setGcType(GcLogType.ParNew);
+        gcRecord.setGcType(ParNew);
         gcRecord.setDateTime(matcher.group(1));
         gcRecord.setRunTime(Float.parseFloat(matcher.group(2)));
         gcRecord.setGcReason(matcher.group(3));
@@ -50,29 +52,34 @@ public class GcRecord {
         return gcRecord;
     }
 
-    public static GcRecord genCms1Record(Matcher matcher) {
+    public static GcRecord genCMSInitialMarkRecord(Matcher matcher) {
         GcRecord gcRecord = new GcRecord();
-        gcRecord.setGcType(GcLogType.CMS1);
+        gcRecord.setGcType(CMSInitialMark);
         gcRecord.setDateTime(matcher.group(1));
-/*        gcRecord.setRunTime(matcher.group(2));
+        gcRecord.setRunTime(Float.parseFloat(matcher.group(2)));
         gcRecord.setGcReason(matcher.group(3));
         gcRecord.setYoungUsedSize(matcher.group(4));
         gcRecord.setYoungAfterGcUsed(matcher.group(5));
         gcRecord.setYoungTotalSize(matcher.group(6));
-        gcRecord.setUsedTime1(matcher.group(7));*/
+        gcRecord.setUsedTime1(matcher.group(7));
         return gcRecord;
     }
 
-    public static GcRecord genCms2Record(Matcher matcher) {
+    public static GcRecord genCMSFinalRemarkRecord(Matcher matcher) {
         GcRecord gcRecord = new GcRecord();
-        gcRecord.setGcType(GcLogType.CMS2);
+        gcRecord.setGcType(CMSFinalRemark);
         gcRecord.setDateTime(matcher.group(1));
-//        gcRecord.setRunTime(matcher.group(2));
+        gcRecord.setRunTime(Float.parseFloat(matcher.group(2)));
+        gcRecord.setOldAfterGcUsed(matcher.group(3));
+        gcRecord.setOldTotalSize(matcher.group(4));
+        gcRecord.setHeapAfterGcUsed(matcher.group(5));
+        gcRecord.setHeapTotalSize(matcher.group(6));
+        gcRecord.setUsedTime1(matcher.group(7));
         return gcRecord;
     }
 
     private Integer id;
-    private String gcType;
+    private GcLogType gcType;
 
 
     private String dateTime;
@@ -81,6 +88,9 @@ public class GcRecord {
     private String youngUsedSize;
     private String youngAfterGcUsed;
     private String youngTotalSize;
+    private String oldUsedSize;
+    private String oldAfterGcUsed;
+    private String oldTotalSize;
     private String usedTime1;
     private String heapUsedSize;
     private String heapAfterGcUsed;
@@ -138,24 +148,24 @@ public class GcRecord {
         this.dateTime = dateTime;
     }
 
-    public static String getGcReg(String gcLogType) {
+    public static String getGcReg(GcLogType gcLogType) {
         String reg = null;
         switch (gcLogType) {
-            case GcLogType.ParNew:
+            case ParNew:
                 reg = getParNewReg();
                 break;
-            case GcLogType.CMS1:
-                reg = getCms1Reg();
+            case CMSInitialMark:
+                reg = getCMSInitialMarkReg();
                 break;
-            case GcLogType.CMS2:
-                reg = getCms2Reg();
+            case CMSFinalRemark:
+                reg = getCMSFinalRemarkReg();
                 break;
             default:
         }
         return reg;
     }
 
-    private static String getCms1Reg() {
+    private static String getCMSInitialMarkReg() {
         //2021-11-10T14:10:06.695+0800: 517828.715: [GC (CMS Initial Mark) [1 CMS-initial-mark: 216631K(319488K)] 312340K(503808K), 0.0318128 secs] [Times: user=0.12 sys=0.00, real=0.03 secs]
         StringBuilder sb = new StringBuilder();
         sb.append("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3})").append("[\\+\\-\\d:]{5}: ");
@@ -168,10 +178,15 @@ public class GcRecord {
         return sb.toString();
     }
 
-    private static String getCms2Reg() {
+    private static String getCMSFinalRemarkReg() {
         StringBuilder sb = new StringBuilder();
         sb.append("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3})").append("[\\+\\-\\d:]{5}: ");
-        sb.append("(\\d{1,}.\\d{1,})").append(": \\[GC \\(CMS Final Remark\\) ");
+        sb.append("(\\d{1,}.\\d{1,})").append(": \\[GC \\(CMS Final Remark\\) ").append("[\\s\\S]*");
+        sb.append("\\[1 CMS-remark: ").append("(\\d{1,})").append("K\\(");
+        sb.append("(\\d{1,})").append("K\\)\\] ");
+        sb.append("(\\d{1,})").append("K\\(");
+        sb.append("(\\d{1,})").append("K\\), ");
+        sb.append("([\\d.]{1,})").append(" secs\\]");
         return sb.toString();
     }
 
