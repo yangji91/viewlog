@@ -2,25 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>${name!}>${ip!}</title>
+    <title>${name!}>${ip!}>gc</title>
     <link rel="stylesheet" type="text/css" href="/bootstrap.min.css">
     <script src="/jquery-3.4.1.min.js"></script>
 </head>
+<style>
+    .young {
+        background-color: #F0F8FF;
+    }
+
+    .old {
+        background-color: #FAEBD7;
+    }
+
+    .heap {
+        background-color: #F0FFFF;
+    }
+</style>
 <body>
 <div>
     <a href="/" style="font-size: xx-large">查看日志</a> >${name!}>${ip!}
 </div>
 <div>
-    停顿总时间：${gc.totalStopWorldTime}
+    <h4>统计最新1000次gc日志</h4>
     <table class="table" style="width:1000px">
         <tbody>
         <tr>
             <td>统计时间范围：</td>
             <td>${gc.beginRunTime}--${gc.endRunTime}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>停顿总时间：</td>
+            <td>${gc.totalStopWorldTime}</td>
+            <td>吞吐率：</td>
+            <td>${gc.throughput!}</td>
         </tr>
         <tr>
             <td>年轻代回收次数：</td>
@@ -51,14 +64,17 @@
             <td>垃圾回收器</td>
             <td>回收原因</td>
             <td>距上次回收时间</td>
-            <td>年轻代已用内存</td>
-            <td>年轻代回收后占用内存</td>
-            <td>年轻代总内存</td>
-            <td>停顿时间1</td>
-            <td>堆已用内存</td>
-            <td>堆回收后占用内存</td>
-            <td>堆总内存</td>
-            <td>停顿时间2</td>
+            <td class="young">年轻代已用内存</td>
+            <td class="young">年轻代gc后已用内存</td>
+            <td class="young">年轻代总内存</td>
+            <td class="old">老年代已用内存</td>
+            <td class="old">老年代gc后已用内存</td>
+            <td class="old">老年代总内存</td>
+            <td>STW停顿时间</td>
+            <td class="heap">堆已用内存</td>
+            <td class="heap">堆回收后占用内存</td>
+            <td class="heap">堆总内存</td>
+            <td>执行耗时</td>
         </tr>
         <#list gc.gcRecordList! as g>
             <tr>
@@ -68,13 +84,16 @@
                 <td>${g.gcType!}</td>
                 <td>${g.gcReason!}</td>
                 <td>${g.intervalTime!}</td>
-                <td>${g.youngUsedSize!} (${g.youngUsedSizeRate!})</td>
-                <td>${g.youngAfterGcUsed!} (${g.youngAfterGcUsedRate!})</td>
-                <td>${g.youngTotalSize!}</td>
+                <td class="young">${g.youngUsedSize!} (${g.youngUsedSizeRate!})</td>
+                <td class="young">${g.youngAfterGcUsed!} (${g.youngAfterGcUsedRate!})</td>
+                <td class="young">${g.youngTotalSize!}</td>
+                <td class="old">${g.oldUsedSize!} (${g.oldUsedSizeRate!})</td>
+                <td class="old">${g.oldAfterGcUsed!} (${g.oldAfterGcUsedRate!})</td>
+                <td class="old">${g.oldTotalSize!}</td>
                 <td>${g.usedTime1!}</td>
-                <td>${g.heapUsedSize!}</td>
-                <td>${g.heapAfterGcUsed!}</td>
-                <td>${g.heapTotalSize!}</td>
+                <td class="heap">${g.heapUsedSize!}</td>
+                <td class="heap">${g.heapAfterGcUsed!}</td>
+                <td class="heap">${g.heapTotalSize!}</td>
                 <td>${g.usedTime2!}</td>
             </tr>
         </#list>

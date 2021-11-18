@@ -124,6 +124,26 @@ public class GcRecord {
         return DataUtil.kbToMb(youngTotalSize);
     }
 
+    public String getOldUsedSize() {
+        return DataUtil.kbToMb(oldUsedSize);
+    }
+
+    public String getOldUsedSizeRate() {
+        return DataUtil.rate(oldUsedSize, oldTotalSize);
+    }
+
+    public String getOldAfterGcUsed() {
+        return DataUtil.kbToMb(oldAfterGcUsed);
+    }
+
+    public String getOldAfterGcUsedRate() {
+        return DataUtil.rate(oldAfterGcUsed, oldTotalSize);
+    }
+
+    public String getOldAfterGcUsedUpRate() {
+        return DataUtil.upRate(oldUsedSize, oldAfterGcUsed, oldTotalSize);
+    }
+
     public String getHeapUsedSize() {
         return DataUtil.kbToMb(heapUsedSize);
     }

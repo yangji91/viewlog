@@ -12,6 +12,10 @@
         height: 30px;
         border: 1px solid #000
     }
+
+    .product {
+        background-color: #F0F8FF;
+    }
 </style>
 <body>
 <a href="/" style="font-size: xx-large">查看日志</a>
@@ -22,7 +26,7 @@
             <td>分组</td>
             <td>项目名称</td>
             <td>测试环境</td>
-            <td>生产环境</td>
+            <td class="product">生产环境</td>
         </tr>
         <#if logs??>
             <#list logs as l>
@@ -40,7 +44,7 @@
                             </#if>
                         </#list>
                     </td>
-                    <td>
+                    <td class="product">
                         <#assign prodNode=1>
                         <#list l.nodeList as node>
                             <#if node.env='prod'>

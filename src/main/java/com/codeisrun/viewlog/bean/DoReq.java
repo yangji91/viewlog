@@ -33,7 +33,7 @@ public class DoReq {
                     result = HEAD_N.getCmdHeader() + this.length + " " + this.path;
                     break;
                 case GREP_C:
-                    result = GREP_C.getCmdHeader() + this.length + " " + this.key + " " + this.path;
+                    result = GREP_C.getCmdHeader() + this.length + " '" + this.key + "' " + this.path;
                     break;
                 case GZIP_DC:
                     result = GZIP_DC.getCmdHeader() + this.path + " | grep -aC " + this.length + " " + this.key;

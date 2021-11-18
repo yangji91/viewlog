@@ -2,6 +2,8 @@ package com.codeisrun.viewlog.bean;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -28,6 +30,10 @@ public class GcResult {
      * 停顿总时间
      */
     private float totalStopWorldTime = 0;
+    /**
+     * 吞吐量
+     */
+    private String throughput;
 
 
     public float getBeginRunTime() {
@@ -86,6 +92,17 @@ public class GcResult {
             }
         }
         return oldGcStopWorldTime;
+    }
+
+
+    public String getThroughput() {
+        BigDecimal a = new BigDecimal(getTotalStopWorldTime());
+        BigDecimal b = new BigDecimal(getRunTime());
+        BigDecimal c = b.subtract(a);
+        BigDecimal d = c.divide(b, 12, BigDecimal.ROUND_HALF_UP);
+        d = d.multiply(new BigDecimal(100));
+        DecimalFormat format = new DecimalFormat("0.0000000000");
+        return format.format(d) + "%";
     }
 
 }
