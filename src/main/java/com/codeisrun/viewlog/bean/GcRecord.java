@@ -44,11 +44,11 @@ public class GcRecord {
         gcRecord.setYoungUsedSize(matcher.group(4));
         gcRecord.setYoungAfterGcUsed(matcher.group(5));
         gcRecord.setYoungTotalSize(matcher.group(6));
-        gcRecord.setUsedTime1(matcher.group(7));
+        gcRecord.setStopWorldTime(Float.parseFloat(matcher.group(7)));
         gcRecord.setHeapUsedSize(matcher.group(8));
         gcRecord.setHeapAfterGcUsed(matcher.group(9));
         gcRecord.setHeapTotalSize(matcher.group(10));
-        gcRecord.setUsedTime2(matcher.group(11));
+        gcRecord.setGcRunTime(Float.parseFloat(matcher.group(11)));
         return gcRecord;
     }
 
@@ -61,7 +61,7 @@ public class GcRecord {
         gcRecord.setYoungUsedSize(matcher.group(4));
         gcRecord.setYoungAfterGcUsed(matcher.group(5));
         gcRecord.setYoungTotalSize(matcher.group(6));
-        gcRecord.setUsedTime1(matcher.group(7));
+        gcRecord.setStopWorldTime(Float.parseFloat(matcher.group(7)));
         return gcRecord;
     }
 
@@ -74,7 +74,7 @@ public class GcRecord {
         gcRecord.setOldTotalSize(matcher.group(4));
         gcRecord.setHeapAfterGcUsed(matcher.group(5));
         gcRecord.setHeapTotalSize(matcher.group(6));
-        gcRecord.setUsedTime1(matcher.group(7));
+        gcRecord.setStopWorldTime(Float.parseFloat(matcher.group(7)));
         return gcRecord;
     }
 
@@ -91,11 +91,11 @@ public class GcRecord {
     private String oldUsedSize;
     private String oldAfterGcUsed;
     private String oldTotalSize;
-    private String usedTime1;
+    private float stopWorldTime;
     private String heapUsedSize;
     private String heapAfterGcUsed;
     private String heapTotalSize;
-    private String usedTime2;
+    private float gcRunTime;
 
     private float intervalTime;
 

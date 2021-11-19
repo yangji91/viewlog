@@ -25,7 +25,7 @@
 </div>
 <div>
     <h4>统计最新1000次gc日志</h4>
-    <table class="table" style="width:1000px">
+    <table class="table" style="width:1200px">
         <tbody>
         <tr>
             <td>统计时间范围：</td>
@@ -34,6 +34,8 @@
             <td>${gc.totalStopWorldTime}</td>
             <td>吞吐率：</td>
             <td>${gc.throughput!}</td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td>年轻代回收次数：</td>
@@ -41,15 +43,19 @@
             <td>年轻代多久回收一次：</td>
             <td>${gc.youngGcFrequency}</td>
             <td>年轻代停顿总时间：</td>
-            <td>${gc.youngGcStopWorldTime}</td>
+            <td>${gc.youngGcTotalStopWorldTime}</td>
+            <td>年轻代最长一次停顿时间：</td>
+            <td>${gc.youngGcMaxStopWorldTime}</td>
         </tr>
         <tr>
             <td>老年代回收次数：</td>
             <td>${gc.oldGcCount}</td>
             <td>老年代多久回收一次：</td>
-            <td>${gc.oldGcFrequency}</td>
+            <td>${gc.oldGcFrequency!}</td>
             <td>老年代停顿总时间：</td>
-            <td>${gc.oldGcStopWorldTime}</td>
+            <td>${gc.oldGcTotalStopWorldTime}</td>
+            <td>老年代最长一次停顿时间：</td>
+            <td>${gc.oldGcMaxStopWorldTime}</td>
         </tr>
         </tbody>
     </table>
@@ -80,7 +86,7 @@
             <tr>
                 <td>${g.id}</td>
                 <td>${g.dateTime}</td>
-                <td>${g.runTime}</td>
+                <td>${g.gcRunTime}</td>
                 <td>${g.gcType!}</td>
                 <td>${g.gcReason!}</td>
                 <td>${g.intervalTime!}</td>
@@ -90,11 +96,11 @@
                 <td class="old">${g.oldUsedSize!} (${g.oldUsedSizeRate!})</td>
                 <td class="old">${g.oldAfterGcUsed!} (${g.oldAfterGcUsedRate!})</td>
                 <td class="old">${g.oldTotalSize!}</td>
-                <td>${g.usedTime1!}</td>
+                <td>${g.stopWorldTime!}</td>
                 <td class="heap">${g.heapUsedSize!}</td>
                 <td class="heap">${g.heapAfterGcUsed!}</td>
                 <td class="heap">${g.heapTotalSize!}</td>
-                <td>${g.usedTime2!}</td>
+                <td>${g.gcRunTime!}</td>
             </tr>
         </#list>
         </thead>
