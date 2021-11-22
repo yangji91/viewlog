@@ -14,7 +14,7 @@
     }
 
     .product {
-        background-color: #F0F8FF;
+        background-color: #FFEBCD;
     }
 </style>
 <body>

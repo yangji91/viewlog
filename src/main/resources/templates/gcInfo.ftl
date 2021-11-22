@@ -29,7 +29,7 @@
         <tbody>
         <tr>
             <td>统计时间范围：</td>
-            <td>${gc.beginRunTime}--${gc.endRunTime}</td>
+            <td>${gc.beginRunTimeFormat}--${gc.endRunTimeFormat}</td>
             <td>停顿总时间：</td>
             <td>${gc.totalStopWorldTime}</td>
             <td>吞吐率：</td>
@@ -41,7 +41,7 @@
             <td>年轻代回收次数：</td>
             <td>${gc.youngGcCount}</td>
             <td>年轻代多久回收一次：</td>
-            <td>${gc.youngGcFrequency}</td>
+            <td>${gc.youngGcFrequencyFormat}</td>
             <td>年轻代停顿总时间：</td>
             <td>${gc.youngGcTotalStopWorldTime}</td>
             <td>年轻代最长一次停顿时间：</td>
@@ -51,7 +51,7 @@
             <td>老年代回收次数：</td>
             <td>${gc.oldGcCount}</td>
             <td>老年代多久回收一次：</td>
-            <td>${gc.oldGcFrequency!}</td>
+            <td>${gc.oldGcFrequencyFormat}</td>
             <td>老年代停顿总时间：</td>
             <td>${gc.oldGcTotalStopWorldTime}</td>
             <td>老年代最长一次停顿时间：</td>
@@ -66,7 +66,7 @@
         <tr>
             <td>序号</td>
             <td>回收时间</td>
-            <td>已运行时间(秒)</td>
+            <td>已运行时间</td>
             <td>垃圾回收器</td>
             <td>回收原因</td>
             <td>距上次回收时间</td>
@@ -86,10 +86,10 @@
             <tr>
                 <td>${g.id}</td>
                 <td>${g.dateTime}</td>
-                <td>${g.gcRunTime}</td>
+                <td>${g.runTimeFormat}</td>
                 <td>${g.gcType!}</td>
                 <td>${g.gcReason!}</td>
-                <td>${g.intervalTime!}</td>
+                <td>${g.intervalTimeFormat!}</td>
                 <td class="young">${g.youngUsedSize!} (${g.youngUsedSizeRate!})</td>
                 <td class="young">${g.youngAfterGcUsed!} (${g.youngAfterGcUsedRate!})</td>
                 <td class="young">${g.youngTotalSize!}</td>

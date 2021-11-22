@@ -149,7 +149,7 @@ public class SshViewLogServiceImpl implements IViewLogService {
         getGcResult(ip, path, gcResult, "ParNew: ", GcLogType.ParNew);
         getGcResult(ip, path, gcResult, "CMS Initial Mark", GcLogType.CMSInitialMark);
         getGcResult(ip, path, gcResult, "CMS Final Remark", GcLogType.CMSFinalRemark);
-        gcResult.setGcRecordList(gcResult.getGcRecordList().stream().sorted(Comparator.comparing(GcRecord::getRunTime)).collect(Collectors.toList()));
+        gcResult.initData();
         return gcResult;
     }
 

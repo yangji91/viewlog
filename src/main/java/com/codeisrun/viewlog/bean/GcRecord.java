@@ -100,6 +100,10 @@ public class GcRecord {
     private float intervalTime;
 
 
+    public String getRunTimeFormat() {
+        return DataUtil.secondFormat(this.runTime);
+    }
+
     public String getYoungUsedSize() {
         return DataUtil.kbToMb(youngUsedSize);
     }
@@ -136,6 +140,10 @@ public class GcRecord {
         return DataUtil.kbToMb(oldAfterGcUsed);
     }
 
+    public String getOldTotalSize() {
+        return DataUtil.kbToMb(oldTotalSize);
+    }
+
     public String getOldAfterGcUsedRate() {
         return DataUtil.rate(oldAfterGcUsed, oldTotalSize);
     }
@@ -160,6 +168,9 @@ public class GcRecord {
         return DataUtil.kbToMb(heapTotalSize);
     }
 
+    public String getIntervalTimeFormat() {
+        return DataUtil.secondFormat(this.intervalTime);
+    }
 
     public void setDateTime(String dateTime) {
         if (dateTime != null) {

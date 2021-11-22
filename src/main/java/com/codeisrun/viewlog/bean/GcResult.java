@@ -1,11 +1,13 @@
 package com.codeisrun.viewlog.bean;
 
+import com.codeisrun.viewlog.util.DataUtil;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author liubinqiang
@@ -17,6 +19,8 @@ public class GcResult {
      * gc记录
      */
     private List<GcRecord> gcRecordList;
+
+
     /**
      * 开始统计时间
      */
@@ -71,28 +75,43 @@ public class GcResult {
     private String throughput;
 
 
-    public float getBeginRunTime() {
-        return gcRecordList.stream().map(GcRecord::getRunTime).min(Comparator.comparing(Float::floatValue)).orElse(0F);
+    public void setBeginRunTime(float beginRunTime) {
+        this.beginRunTime = gcRecordList.stream().map(GcRecord::getRunTime).min(Comparator.comparing(Float::floatValue)).orElse(0F);
     }
 
-    public float getEndRunTime() {
-        return gcRecordList.stream().map(GcRecord::getRunTime).max(Comparator.comparing(Float::floatValue)).orElse(0F);
+    public String getBeginRunTimeFormat() {
+        return DataUtil.secondFormat(getBeginRunTime());
     }
 
-    public float getRunTime() {
-        return getEndRunTime() - getBeginRunTime();
+    public void setEndRunTime(float endRunTime) {
+        this.endRunTime = gcRecordList.stream().map(GcRecord::getRunTime).max(Comparator.comparing(Float::floatValue)).orElse(0F);
     }
 
-    public int getYoungGcCount() {
-        return (int) gcRecordList.stream().filter(g -> GcLogType.ParNew.equals(g.getGcType())).count();
+    public String getEndRunTimeFormat() {
+        return DataUtil.secondFormat(getEndRunTime());
     }
 
-    public int getOldGcCount() {
-        return (int) gcRecordList.stream().filter(g -> GcLogType.CMSInitialMark.equals(g.getGcType())).count();
+    public void setRunTime(float runTime) {
+        this.runTime = getEndRunTime() - getBeginRunTime();
+    }
+
+    public void setYoungGcCount(int youngGcCount) {
+        this.youngGcCount = (int) gcRecordList.stream().filter(g -> GcLogType.ParNew.equals(g.getGcType())).count();
+    }
+
+    public void setOldGcCount(int oldGcCount) {
+        this.oldGcCount = (int) gcRecordList.stream().filter(g -> GcLogType.CMSInitialMark.equals(g.getGcType())).count();
     }
 
     public float getYoungGcFrequency() {
+        if (getYoungGcCount() == 0) {
+            return 0;
+        }
         return getRunTime() / getYoungGcCount();
+    }
+
+    public String getYoungGcFrequencyFormat() {
+        return DataUtil.secondFormat(getYoungGcFrequency());
     }
 
     public float getYoungGcMaxStopWorldTime() {
@@ -108,7 +127,14 @@ public class GcResult {
     }
 
     public float getOldGcFrequency() {
+        if (getOldGcCount() == 0) {
+            return 0;
+        }
         return getRunTime() / getOldGcCount();
+    }
+
+    public String getOldGcFrequencyFormat() {
+        return DataUtil.secondFormat(getOldGcFrequency());
     }
 
 
@@ -148,6 +174,15 @@ public class GcResult {
         d = d.multiply(new BigDecimal(100));
         DecimalFormat format = new DecimalFormat("0.0000000000");
         return format.format(d) + "%";
+    }
+
+    public void initData() {
+        this.setGcRecordList(getGcRecordList().stream().sorted(Comparator.comparing(GcRecord::getRunTime)).collect(Collectors.toList()));
+        this.setBeginRunTime(0);
+        this.setEndRunTime(0);
+        this.setRunTime(0);
+        this.setOldGcCount(0);
+        this.setYoungGcCount(0);
     }
 
 }
