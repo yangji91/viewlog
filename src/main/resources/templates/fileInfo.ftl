@@ -15,7 +15,7 @@
         <ul class="nav nav-tabs">
             <#list fs.projectNodes as node>
                 <li class="nav-item">
-                    <#if node.ip=ip>
+                    <#if node.nodeId=nodeId>
                         <a class="nav-link active" href="${node.viewFileInfoUrl}">${node.viewIp}</a>
                     <#else>
                         <a class="nav-link" href="${node.viewFileInfoUrl}">${node.viewIp}</a>

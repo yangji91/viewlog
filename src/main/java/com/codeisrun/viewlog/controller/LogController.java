@@ -70,6 +70,7 @@ public class LogController {
         Project project = viewLogService.getProject(projectId);
         modelMap.put("name", project == null ? "" : project.getName());
         modelMap.put("ip", ip);
+        modelMap.put("nodeId", nodeId);
         return "fileInfo";
     }
 
