@@ -71,6 +71,7 @@ public class LogController {
         modelMap.put("name", project == null ? "" : project.getName());
         modelMap.put("ip", ip);
         modelMap.put("nodeId", nodeId);
+        modelMap.put("logSearchViewLines", systemConfig.logSearchViewLines);
         return "fileInfo";
     }
 

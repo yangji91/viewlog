@@ -30,6 +30,9 @@ threadPool:
 #    health:
 #      show-details: always
 log:
+  search:
+    #搜索默认前后行数
+    viewLines: 30
   #服务器信息：ip地址|ssh用户名|密码
   servers:
     192.168.0.8|root|root,

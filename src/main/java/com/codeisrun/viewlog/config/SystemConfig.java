@@ -12,6 +12,8 @@ public class SystemConfig {
     public String wsPort;
     @Value("${netty-websocket.path}")
     public String wsPath;
+    @Value("${log.search.viewLines}")
+    public String logSearchViewLines;
     @Value("${log.path}")
     public String logPaths;
     @Value("${log.servers}")

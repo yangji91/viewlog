@@ -63,7 +63,7 @@
                         <#if !f.logFile>
                             <a atype="searchLog1" href="javascript:" url="${f.searchGzipLogUrl!}">搜索|前后行数</a>
                         </#if>
-                        <input type="text" value="5" size="1px">
+                        <input type="text" value="${logSearchViewLines}" size="1px">
                     </#if>
                 </td>
                 <td>
