@@ -18,6 +18,15 @@ public interface IViewLogService {
      */
     List<Project> getProjectList();
 
+    /**
+     * 获取该目录下所有文件信息
+     *
+     * @param projectId
+     * @param nodeId
+     * @param ip
+     * @param path
+     * @return
+     */
     ProjectFileInfo getFileInfos(int projectId, int nodeId, String ip, String path);
 
     Project.ProjectNode getNode(int projectId, int nodeId);

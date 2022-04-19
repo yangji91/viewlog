@@ -61,7 +61,7 @@
             log(event.data);
         };
         websocket.onclose = function (ev) {
-            log("连接已经关闭")
+            log("------连接已经关闭------");
         }
     });
 </script>

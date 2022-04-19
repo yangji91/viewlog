@@ -25,7 +25,13 @@ public class FileInfo {
     private boolean isLogFile;
     private boolean isCompressFile;
     private String dirUrl;
+    /**
+     *
+     */
     private String openUrl;
+    /**
+     * 文件下载地址
+     */
     private String downloadUrl;
     /**
      * 实时日志地址

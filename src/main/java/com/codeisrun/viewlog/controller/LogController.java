@@ -106,8 +106,10 @@ public class LogController {
         StringBuilder sb = new StringBuilder();
         sb.append(systemConfig.wsPath)
                 .append("?ip=").append(req.getIp())
-                .append("&cmd=").append(req.getCmd())
-                .append("&path=").append(req.getPath());
+                .append("&cmd=").append(req.getCode())
+                .append("&path=").append(req.getPath())
+                .append("&key=").append(req.getKey())
+                .append("&length=").append(req.getLength());
         String wsUrl = sb.toString();
         log.info("ws地址：{}", wsUrl);
         modelMap.put("wsUrl", wsUrl);

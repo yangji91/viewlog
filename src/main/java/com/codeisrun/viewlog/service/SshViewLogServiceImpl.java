@@ -88,19 +88,23 @@ public class SshViewLogServiceImpl implements IViewLogService {
             f.setPath(subPath);
             f.setDownloadUrl(("/viewlog/download?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath)));
             f.setOpenUrl("/viewlog/open?ip=" + ip + "&path=" + LogUtil.urlEncode(subPath));
-            f.setRealTimeLogUrl("/viewlog/do?ip=" + ip + "&code=1&path=" + LogUtil.urlEncode(subPath));
-            f.setTailNumLogUrl("/viewlog/do?ip=" + ip + "&code=2&path=" + LogUtil.urlEncode(subPath));
-            f.setHeadNumLogUrl("/viewlog/do?ip=" + ip + "&code=6&path=" + LogUtil.urlEncode(subPath));
-            f.setSearchLogUrl("/viewlog/do?ip=" + ip + "&code=3&path=" + LogUtil.urlEncode(subPath));
-            f.setSearchGzipLogUrl("/viewlog/do?ip=" + ip + "&code=4&path=" + LogUtil.urlEncode(subPath));
-            f.setHeadGzipLogUrl("/viewlog/do?ip=" + ip + "&code=7&path=" + LogUtil.urlEncode(subPath));
-            f.setTailGzipLogUrl("/viewlog/do?ip=" + ip + "&code=8&path=" + LogUtil.urlEncode(subPath));
+            f.setRealTimeLogUrl(joinUrl(ip, CmdEnum.TAIL_F, subPath));
+            f.setTailNumLogUrl(joinUrl(ip, CmdEnum.TAIL_N, subPath));
+            f.setHeadNumLogUrl(joinUrl(ip, CmdEnum.HEAD_N, subPath));
+            f.setSearchLogUrl(joinUrl(ip, CmdEnum.GREP_C, subPath));
+            f.setSearchGzipLogUrl(joinUrl(ip, CmdEnum.GZIP_DC_TAIL, subPath));
+            f.setHeadGzipLogUrl(joinUrl(ip, CmdEnum.GZIP_DC_HEAD, subPath));
+            f.setTailGzipLogUrl(joinUrl(ip, CmdEnum.GZIP_DC_TAIL, subPath));
             f.setFileIcon(LogUtil.getIcon(f));
             f.setLogFile(LogUtil.isLogFile(f));
             f.setCompressFile(LogUtil.isCompressFile(f));
         }
         projectFileInfo.setProjectNodes(getById(projectId, nodeId));
         return projectFileInfo;
+    }
+
+    private String joinUrl(String ip, CmdEnum cmdEnum, String subPath) {
+        return String.format("/viewlog/do?ip=%s&code=%s&path=%s", ip, cmdEnum.getCode(), LogUtil.urlEncode(subPath));
     }
 
     @Override

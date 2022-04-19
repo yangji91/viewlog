@@ -41,14 +41,19 @@ public class WebSocketServer {
     private BufferedReader bufferedReader = null;
 
     @OnOpen
-    public void onOpen(Session session, HttpHeaders headers, @RequestParam String ip, @RequestParam String cmd, @RequestParam String path) {
+    public void onOpen(Session session, HttpHeaders headers,
+                       @RequestParam String ip,
+                       @RequestParam String cmd,
+                       @RequestParam String path,
+                       @RequestParam String key,
+                       @RequestParam String length) {
         log.info("---onOpen---收到连接：{},userAgent={},X-Real-IP={},ip={},cmd={},path={}",
                 getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp), ip, cmd, path);
         sendMsg(session, "------websocket连接成功------");
         if (!viewLogService.verifyPath(ip, path)) {
             sendMsg(session, "文件路径不支持");
         }
-        cmd = LogUtil.urlDecoder(cmd);
+        cmd = CmdEnum.getCmd(cmd, path, key, length);
         try {
             inputStream = doCmd(ip, systemConfig.getServerUsername(ip), systemConfig.getServerPassword(ip), cmd, path);
             inputStreamReader = new InputStreamReader(inputStream);
