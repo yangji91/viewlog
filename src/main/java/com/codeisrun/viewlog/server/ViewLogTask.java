@@ -39,11 +39,13 @@ public class ViewLogTask implements Runnable {
                 if (line != null) {
                     session.sendText(line + "<br>");
                     logCount++;
+                    continue;
                 } else {
                     emptyCount++;
+                    log.info("读取到空数据：{}", emptyCount);
                 }
                 //如果不是实时日志，并且读取多次依然没有数据，关闭连接
-                if (!isRealTimeLog && emptyCount > 10) {
+                if (!isRealTimeLog && emptyCount >= 3) {
                     session.sendText("------日志已读取完，累计读取" + logCount + "行日志，websocket将要关闭------<br>");
                     //暂停下线程，让把消息传给浏览器，再关闭连接
                     threadSleep();
