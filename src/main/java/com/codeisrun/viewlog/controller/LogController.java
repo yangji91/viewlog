@@ -1,11 +1,9 @@
 package com.codeisrun.viewlog.controller;
 
-import com.codeisrun.viewlog.bean.DoReq;
-import com.codeisrun.viewlog.bean.GcResult;
-import com.codeisrun.viewlog.bean.ProjectFileInfo;
+import com.alibaba.fastjson.JSON;
+import com.codeisrun.viewlog.bean.*;
 import com.codeisrun.viewlog.config.SystemConfig;
 import com.codeisrun.viewlog.service.IViewLogService;
-import com.codeisrun.viewlog.bean.Project;
 import com.codeisrun.viewlog.util.LogUtil;
 import com.codeisrun.viewlog.util.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author liubinqiang
@@ -39,17 +38,33 @@ public class LogController {
     private IViewLogService viewLogService;
 
     /**
-     * 主页
+     * 项目目录页面
+     *
+     * @param request
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping("index")
+    public String indexSearch(HttpServletRequest request, ModelMap modelMap) {
+        log.info("访问日志搜索首页收到请求");
+        Set<ProjectGroup> groupList = viewLogService.getProjectGroupList();
+        modelMap.put("groupList", groupList);
+        return "index";
+    }
+
+    /**
+     * 项目目录页面
      *
      * @param request
      * @param modelMap
      * @return
      */
     @RequestMapping(path = {"", "/menu"})
-    public String index(HttpServletRequest request, ModelMap modelMap) {
+    public String indexMenu(HttpServletRequest request, ModelMap modelMap) {
         long a = System.currentTimeMillis();
         log.info("访问日志首页收到请求");
         List<Project> logs = viewLogService.getProjectList();
+        log.info(JSON.toJSONString(logs));
         modelMap.put("logs", logs);
         log.info("访问日志首页返回，耗时：{}", System.currentTimeMillis() - a);
         return "menu";
@@ -68,7 +83,7 @@ public class LogController {
         ProjectFileInfo fs = viewLogService.getFileInfos(projectId, nodeId, ip, path);
         modelMap.put("fs", fs);
         Project project = viewLogService.getProject(projectId);
-        modelMap.put("name", project == null ? "" : project.getName());
+        modelMap.put("name", project == null ? "" : project.getProjectName());
         modelMap.put("ip", ip);
         modelMap.put("nodeId", nodeId);
         modelMap.put("logSearchViewLines", systemConfig.logSearchViewLines);
@@ -89,7 +104,7 @@ public class LogController {
         GcResult gcResult = viewLogService.analyseGcLog(ip, path);
         modelMap.put("gc", gcResult);
         Project project = viewLogService.getProject(projectId);
-        modelMap.put("name", project == null ? "" : project.getName());
+        modelMap.put("name", project == null ? "" : project.getProjectName());
         modelMap.put("ip", ip);
         return "gcInfo";
     }

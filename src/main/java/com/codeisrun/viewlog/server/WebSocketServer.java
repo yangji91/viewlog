@@ -39,6 +39,7 @@ public class WebSocketServer {
     private InputStream inputStream = null;
     private InputStreamReader inputStreamReader = null;
     private BufferedReader bufferedReader = null;
+    private long start;
 
     @OnOpen
     public void onOpen(Session session, HttpHeaders headers,
@@ -49,7 +50,8 @@ public class WebSocketServer {
                        @RequestParam String length) {
         log.info("---onOpen---收到连接：{},userAgent={},X-Real-IP={},ip={},cmd={},path={}",
                 getChannelInfo(session), headers.get(ConstStr.userAgent), headers.get(ConstStr.xRealIp), ip, cmd, path);
-        sendMsg(session, "------websocket连接成功------");
+        sendMsg(session, "------websocket连接成功，正在读取日志中......");
+        start = System.currentTimeMillis();
         if (!viewLogService.verifyPath(ip, path)) {
             sendMsg(session, "文件路径不支持");
         }
@@ -111,7 +113,7 @@ public class WebSocketServer {
     @OnClose
     public void onClose(Session session) {
         log.info("关闭连接收到请求：{}", session);
-        session.sendText("------websocket已关闭------<br>");
+        session.sendText("------websocket已关闭，耗时：" + (System.currentTimeMillis() - start) + "毫秒------<br>");
         try {
             if (inputStreamReader != null) {
                 log.info("websocket释放资源-1-inputStreamReader.hashCode={}", inputStreamReader.hashCode());

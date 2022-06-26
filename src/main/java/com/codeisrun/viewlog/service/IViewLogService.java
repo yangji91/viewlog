@@ -1,11 +1,9 @@
 package com.codeisrun.viewlog.service;
 
-import com.codeisrun.viewlog.bean.FileInfo;
-import com.codeisrun.viewlog.bean.GcResult;
-import com.codeisrun.viewlog.bean.Project;
-import com.codeisrun.viewlog.bean.ProjectFileInfo;
+import com.codeisrun.viewlog.bean.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author liubinqiang
@@ -17,6 +15,13 @@ public interface IViewLogService {
      * @return
      */
     List<Project> getProjectList();
+
+    /**
+     * 查询项目分组
+     *
+     * @return
+     */
+    Set<ProjectGroup> getProjectGroupList();
 
     /**
      * 获取该目录下所有文件信息

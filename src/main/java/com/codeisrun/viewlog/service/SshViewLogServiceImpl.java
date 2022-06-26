@@ -35,22 +35,19 @@ public class SshViewLogServiceImpl implements IViewLogService {
         if (!cacheProjectList.isEmpty()) {
             return cacheProjectList;
         }
-        if (systemConfig.logPaths != null) {
-            String[] ps = systemConfig.logPaths.split(",");
-            int currentProjectId = 1;
-            for (String p : ps) {
-                Project info = Project.getFromLogPath(p, currentProjectId);
-                if (info != null) {
-                    cacheProjectList.add(info);
-                    currentProjectId = currentProjectId + 1;
-                }
-            }
-        }
+
         return cacheProjectList;
     }
 
+    @Override
+    public Set<ProjectGroup> getProjectGroupList() {
+        Set<ProjectGroup> groups = new HashSet<>();
+
+        return groups;
+    }
+
     private List<Project.ProjectNode> getById(int projectId, int nodeId) {
-        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectId() == projectId).findFirst();
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectCode().equals("")).findFirst();
         if (optionalProject.isPresent()) {
             if (!optionalProject.get().getNodeList().isEmpty()) {
                 Optional<Project.ProjectNode> nodeOptional = optionalProject.get().getNodeList().stream().filter(n -> n.getNodeId() == nodeId).findFirst();
@@ -109,7 +106,7 @@ public class SshViewLogServiceImpl implements IViewLogService {
 
     @Override
     public Project.ProjectNode getNode(int projectId, int nodeId) {
-        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectId() == projectId).findFirst();
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectCode().equals("")).findFirst();
         if (optionalProject.isPresent()) {
             if (!optionalProject.get().getNodeList().isEmpty()) {
                 Optional<Project.ProjectNode> nodeOptional = optionalProject.get().getNodeList().stream().filter(n -> n.getNodeId() == nodeId).findFirst();
@@ -123,7 +120,7 @@ public class SshViewLogServiceImpl implements IViewLogService {
 
     @Override
     public Project getProject(int projectId) {
-        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectId() == projectId).findFirst();
+        Optional<Project> optionalProject = getProjectList().stream().filter(p -> p.getProjectCode().equals("")).findFirst();
         if (optionalProject.isPresent()) {
             return optionalProject.get();
         }

@@ -1,0 +1,50 @@
+[
+  {
+    "groupName": "分组1",
+    "projectList": [
+      {
+        "projectCode": "service1",
+        "projectName": "服务1",
+        "nodeList": [
+          {
+            "env": "test",
+            "ip": "192.168.0.1",
+            "logPath": "/home/apache-tomcat/logs"
+          },
+          {
+            "env": "prod",
+            "ip": "192.168.0.1",
+            "logPath": "/home/apache-tomcat/logs"
+          }
+        ]
+      },
+      {
+        "projectCode": "service2",
+        "projectName": "服务2",
+        "nodeList": [
+          {
+            "env": "test",
+            "ip": "192.168.0.2",
+            "logPath": "/home/apache-tomcat/logs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "groupName": "分组2",
+    "projectList": [
+      {
+        "projectCode": "service3",
+        "projectName": "服务3",
+        "nodeList": [
+          {
+            "env": "test",
+            "ip": "192.168.0.2",
+            "logPath": "/home/apache-tomcat/logs"
+          }
+        ]
+      }
+    ]
+  }
+]

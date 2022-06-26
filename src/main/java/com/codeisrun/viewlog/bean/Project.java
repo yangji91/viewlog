@@ -16,42 +16,15 @@ public class Project {
     public Project() {
     }
 
-    public static Project getFromLogPath(String logPath, int projectId) {
-        if (logPath != null && logPath.length() > 0) {
-            String[] ls = logPath.split("\\|");
-            if (ls.length == 3) {
-                Project project = new Project();
-                project.setProjectId(projectId);
-                project.setGroupName(ls[0].trim());
-                project.setName(ls[1].trim());
-                project.setNodeList(ProjectNode.genList(ls[2], projectId));
-                return project;
-            }
-        }
-        return null;
-    }
-
     /**
-     * 项目id
+     * 项目编码
      */
-    private int projectId;
+    private String projectCode;
     /**
-     * 分组名称
+     * 项目编码
      */
-    private String groupName;
-    /**
-     * 项目名称
-     */
-    private String name;
+    private String projectName;
     private List<ProjectNode> nodeList;
-
-    public String getGroupName() {
-        return groupName == null ? "" : groupName;
-    }
-
-    public String getName() {
-        return name == null ? "" : name;
-    }
 
 
     /**

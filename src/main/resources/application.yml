@@ -29,18 +29,4 @@ threadPool:
 #  endpoint:
 #    health:
 #      show-details: always
-log:
-  search:
-    #搜索默认前后行数
-    viewLines: 30
-  #服务器信息：ip地址|ssh用户名|密码
-  servers:
-    192.168.0.8|root|root,
-    192.168.0.9|root|root,
-  #配置要查看的日志路径：分组|项目名称|<test,prod>ip地址（为空代表本地）@日志路径^多个节点
-  path:
-    渠道|app|test-192.168.0.8@/home/aaa/logs
-    ^prod-192.168.0.9@/home/bbb/logs,
-    订单|order|test-192.168.0.8@/home/ccc/logs
-    ^prod-192.168.0.9@/home/ddd/logs
 
